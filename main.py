@@ -280,3 +280,243 @@ save_gray(
 
 print(f"Edge threshold: {threshold}")
 print("Saved Part 1.2 images to outputs/part1/")
+
+# PART 1.3 — DERIVATIVE OF GAUSSIAN
+
+print("\n--- PART 1.3: DERIVATIVE OF GAUSSIAN ---")
+
+
+# Create 2D Gaussian kernel
+
+gaussian_size = 9
+gaussian_sigma = 2.0
+
+gaussian_1d = cv2.getGaussianKernel(
+    gaussian_size,
+    gaussian_sigma
+)
+
+gaussian_2d = gaussian_1d @ gaussian_1d.T
+
+
+# Method 1:
+# Gaussian blur first, then finite differences
+
+camera_blurred = convolve2d(
+    cameraman,
+    gaussian_2d,
+    mode="same",
+    boundary="fill",
+    fillvalue=0
+)
+
+blurred_dx = convolve2d(
+    camera_blurred,
+    Dx,
+    mode="same",
+    boundary="fill",
+    fillvalue=0
+)
+
+blurred_dy = convolve2d(
+    camera_blurred,
+    Dy,
+    mode="same",
+    boundary="fill",
+    fillvalue=0
+)
+
+blurred_gradient = np.sqrt(
+    blurred_dx**2 + blurred_dy**2
+)
+# Ignore padding artifacts at the outer boundary when choosing the normalization scale.
+margin = 10
+
+gradient_scale = np.max(
+    blurred_gradient[
+        margin:-margin,
+        margin:-margin
+    ]
+)
+
+blurred_gradient_display = np.clip(
+    blurred_gradient / gradient_scale,
+    0,
+    1
+)
+
+blurred_threshold = 0.15
+
+blurred_edges = (
+    blurred_gradient_display > blurred_threshold
+)
+
+# Suppress artificial edges caused purely by zero padding
+blurred_edges[:margin, :] = False
+blurred_edges[-margin:, :] = False
+blurred_edges[:, :margin] = False
+blurred_edges[:, -margin:] = False
+
+
+# Build Derivative-of-Gaussian filters
+
+dog_x = convolve2d(
+    gaussian_2d,
+    Dx,
+    mode="full"
+)
+
+dog_y = convolve2d(
+    gaussian_2d,
+    Dy,
+    mode="full"
+)
+
+
+# Apply DoG filters directly to original image
+dog_dx = convolve2d(
+    cameraman,
+    dog_x,
+    mode="same",
+    boundary="fill",
+    fillvalue=0
+)
+
+dog_dy = convolve2d(
+    cameraman,
+    dog_y,
+    mode="same",
+    boundary="fill",
+    fillvalue=0
+)
+
+dog_gradient = np.sqrt(
+    dog_dx**2 + dog_dy**2
+)
+
+# Use the SAME normalization scale as the two-step method.
+dog_gradient_display = np.clip(
+    dog_gradient / gradient_scale,
+    0,
+    1
+)
+
+dog_edges = (
+    dog_gradient_display > blurred_threshold
+)
+
+dog_edges[:margin, :] = False
+dog_edges[-margin:, :] = False
+dog_edges[:, :margin] = False
+dog_edges[:, -margin:] = False
+
+
+# Verify equivalence
+
+margin = 10
+
+dx_difference = np.max(
+    np.abs(
+        blurred_dx[margin:-margin, margin:-margin]
+        -
+        dog_dx[margin:-margin, margin:-margin]
+    )
+)
+
+dy_difference = np.max(
+    np.abs(
+        blurred_dy[margin:-margin, margin:-margin]
+        -
+        dog_dy[margin:-margin, margin:-margin]
+    )
+)
+
+print(
+    f"Gaussian size: {gaussian_size}x{gaussian_size}"
+)
+
+print(
+    f"Gaussian sigma: {gaussian_sigma}"
+)
+
+print(
+    f"Smoothed edge threshold: {blurred_threshold}"
+)
+
+print(
+    "Max interior difference, Dx:",
+    dx_difference
+)
+
+print(
+    "Max interior difference, Dy:",
+    dy_difference
+)
+
+
+save_gray(
+    "outputs/part1/cameraman_blurred.jpg",
+    camera_blurred
+)
+
+save_gray(
+    "outputs/part1/cameraman_blurred_dx.jpg",
+    blurred_dx,
+    signed=True
+)
+
+save_gray(
+    "outputs/part1/cameraman_blurred_dy.jpg",
+    blurred_dy,
+    signed=True
+)
+
+save_gray(
+    "outputs/part1/cameraman_blurred_gradient.jpg",
+    blurred_gradient_display
+)
+
+save_gray(
+    "outputs/part1/cameraman_blurred_edges.jpg",
+    blurred_edges.astype(float)
+)
+
+
+# DoG filters themselves
+save_gray(
+    "outputs/part1/dog_x_filter.jpg",
+    dog_x,
+    signed=True
+)
+
+save_gray(
+    "outputs/part1/dog_y_filter.jpg",
+    dog_y,
+    signed=True
+)
+
+
+# Direct DoG results
+save_gray(
+    "outputs/part1/cameraman_dog_dx.jpg",
+    dog_dx,
+    signed=True
+)
+
+save_gray(
+    "outputs/part1/cameraman_dog_dy.jpg",
+    dog_dy,
+    signed=True
+)
+
+save_gray(
+    "outputs/part1/cameraman_dog_gradient.jpg",
+    dog_gradient_display
+)
+
+save_gray(
+    "outputs/part1/cameraman_dog_edges.jpg",
+    dog_edges.astype(float)
+)
+
+print("Saved Part 1.3 images to outputs/part1/")
