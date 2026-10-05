@@ -1860,3 +1860,125 @@ def save_blend_debug(
                 f"{prefix}_blended_level_{i}.jpg",
                 normalize_signed_color(blended_levels[i])
             )
+
+# PART 2.4 — MULTIRESOLUTION BLENDING
+
+print("\n--- PART 2.4: MULTIRESOLUTION BLENDING ---")
+
+os.makedirs(
+    "outputs/part2_4",
+    exist_ok=True
+)
+blend_levels = 5
+blend_base_sigma = 1.0
+
+
+# ORAPLE MASK
+
+h, w = apple.shape[:2]
+
+mask = np.zeros(
+    (h, w),
+    dtype=float
+)
+
+# Left half = apple
+# Right half = orange
+mask[:, :w // 2] = 1.0
+
+
+# SIMPLE HARD-SEAM RESULT
+
+hard_seam = (
+    mask[:, :, None] * apple
+    +
+    (1.0 - mask[:, :, None]) * orange
+)
+
+save_color(
+    "outputs/part2_4/oraple_hard_seam.jpg",
+    hard_seam
+)
+
+save_gray(
+    "outputs/part2_4/oraple_mask.jpg",
+    mask
+)
+
+(
+    oraple,
+    mask_stack,
+    apple_lap,
+    orange_lap,
+    apple_masked_levels,
+    orange_masked_levels,
+    blended_levels
+) = multiresolution_blend(
+    apple,
+    orange,
+    mask,
+    levels=5,
+    base_sigma=1.0
+)
+
+
+save_color(
+    "outputs/part2_4/oraple_final.jpg",
+    oraple
+)
+
+
+for i in range(5):
+
+    # Gaussian mask at this scale
+    save_gray(
+        f"outputs/part2_4/mask_gaussian_{i}.jpg",
+        mask_stack[i]
+    )
+
+    # Last Laplacian level is low-frequency residual
+    if i == 4:
+
+        save_color(
+            f"outputs/part2_4/apple_masked_level_{i}.jpg",
+            apple_masked_levels[i]
+        )
+
+        save_color(
+            f"outputs/part2_4/orange_masked_level_{i}.jpg",
+            orange_masked_levels[i]
+        )
+
+        save_color(
+            f"outputs/part2_4/blended_level_{i}.jpg",
+            blended_levels[i]
+        )
+
+    else:
+
+        save_color(
+            f"outputs/part2_4/apple_masked_level_{i}.jpg",
+            normalize_signed_color(
+                apple_masked_levels[i]
+            )
+        )
+
+        save_color(
+            f"outputs/part2_4/orange_masked_level_{i}.jpg",
+            normalize_signed_color(
+                orange_masked_levels[i]
+            )
+        )
+
+        save_color(
+            f"outputs/part2_4/blended_level_{i}.jpg",
+            normalize_signed_color(
+                blended_levels[i]
+            )
+        )
+
+
+print(
+    "Saved Oraple and multiresolution stack visualization "
+    "to outputs/part2_4/"
+)
