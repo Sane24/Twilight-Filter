@@ -1505,3 +1505,358 @@ save_color(
     "outputs/part2_2/color_grayscale.jpg",
     hybrid_gray
 )
+
+# PART 2.3 — GAUSSIAN AND LAPLACIAN STACKS
+
+print("\n--- PART 2.3: GAUSSIAN AND LAPLACIAN STACKS ---")
+
+os.makedirs(
+    "outputs/part2_3",
+    exist_ok=True
+)
+
+apple = ensure_rgb(
+    io.imread("apple.jpeg")
+)
+
+orange = ensure_rgb(
+    io.imread("orange.jpeg")
+)
+
+stack_levels = 5
+stack_base_sigma = 1.0
+
+
+# APPLE STACKS
+
+apple_gaussian = gaussian_stack(
+    apple,
+    levels=stack_levels,
+    base_sigma=stack_base_sigma
+)
+
+apple_laplacian = laplacian_stack(
+    apple,
+    levels=stack_levels,
+    base_sigma=stack_base_sigma
+)
+
+
+# ORANGE STACKS
+
+orange_gaussian = gaussian_stack(
+    orange,
+    levels=stack_levels,
+    base_sigma=stack_base_sigma
+)
+
+orange_laplacian = laplacian_stack(
+    orange,
+    levels=stack_levels,
+    base_sigma=stack_base_sigma
+)
+
+for i in range(stack_levels):
+
+    save_color(
+        f"outputs/part2_3/apple_gaussian_{i}.jpg",
+        apple_gaussian[i]
+    )
+
+    save_color(
+        f"outputs/part2_3/orange_gaussian_{i}.jpg",
+        orange_gaussian[i]
+    )
+
+    # Last Laplacian level is already a normal low-frequency image.
+    if i == stack_levels - 1:
+
+        save_color(
+            f"outputs/part2_3/apple_laplacian_{i}.jpg",
+            apple_laplacian[i]
+        )
+
+        save_color(
+            f"outputs/part2_3/orange_laplacian_{i}.jpg",
+            orange_laplacian[i]
+        )
+
+    else:
+
+        save_color(
+            f"outputs/part2_3/apple_laplacian_{i}.jpg",
+            normalize_signed_color(
+                apple_laplacian[i]
+            )
+        )
+
+        save_color(
+            f"outputs/part2_3/orange_laplacian_{i}.jpg",
+            normalize_signed_color(
+                orange_laplacian[i]
+            )
+        )
+
+
+# Verify that Laplacian levels reconstruct the original
+
+apple_reconstructed = np.sum(
+    np.stack(apple_laplacian),
+    axis=0
+)
+
+orange_reconstructed = np.sum(
+    np.stack(orange_laplacian),
+    axis=0
+)
+
+print(
+    "Apple reconstruction max error:",
+    np.max(
+        np.abs(
+            apple - apple_reconstructed
+        )
+    )
+)
+
+print(
+    "Orange reconstruction max error:",
+    np.max(
+        np.abs(
+            orange - orange_reconstructed
+        )
+    )
+)
+
+print(
+    f"Stack levels: {stack_levels}"
+)
+
+print(
+    "Gaussian sigmas:",
+    [
+        0,
+        *[
+            stack_base_sigma * (2 ** (i - 1))
+            for i in range(1, stack_levels)
+        ]
+    ]
+)
+
+print(
+    "Saved Part 2.3 stacks to outputs/part2_3/"
+)
+
+def gaussian_stack_gray(image, levels=5, base_sigma=1.0):
+    """
+    Gaussian stack for a grayscale image / mask.
+    No downsampling.
+    """
+    image = np.asarray(image, dtype=float)
+    stack = [image]
+
+    for level in range(1, levels):
+        sigma = base_sigma * (2 ** (level - 1))
+        kernel = gaussian_kernel_from_sigma(sigma)
+
+        blurred = convolve2d(
+            image,
+            kernel,
+            mode="same",
+            boundary="symm"
+        )
+
+        stack.append(blurred)
+
+    return stack
+
+
+def multiresolution_blend(image_a, image_b, mask, levels=5, base_sigma=1.0):
+    """
+    image_a = selected where mask is white (1)
+    image_b = selected where mask is black (0)
+    """
+    image_a = ensure_rgb(image_a)
+    image_b = ensure_rgb(image_b)
+
+    mask = np.asarray(mask, dtype=float)
+    mask = np.clip(mask, 0, 1)
+
+    lap_a = laplacian_stack(
+        image_a,
+        levels=levels,
+        base_sigma=base_sigma
+    )
+
+    lap_b = laplacian_stack(
+        image_b,
+        levels=levels,
+        base_sigma=base_sigma
+    )
+
+    mask_stack = gaussian_stack_gray(
+        mask,
+        levels=levels,
+        base_sigma=base_sigma
+    )
+
+    masked_a_levels = []
+    masked_b_levels = []
+    blended_levels = []
+
+    for i in range(levels):
+        m = mask_stack[i][:, :, None]
+
+        part_a = m * lap_a[i]
+        part_b = (1.0 - m) * lap_b[i]
+        blended = part_a + part_b
+
+        masked_a_levels.append(part_a)
+        masked_b_levels.append(part_b)
+        blended_levels.append(blended)
+
+    result = np.sum(
+        np.stack(blended_levels),
+        axis=0
+    )
+
+    return (
+        np.clip(result, 0, 1),
+        mask_stack,
+        lap_a,
+        lap_b,
+        masked_a_levels,
+        masked_b_levels,
+        blended_levels
+    )
+
+
+def resize_and_center_crop(image, target_h, target_w):
+    """
+    Resize while preserving aspect ratio, then center crop
+    to exactly (target_h, target_w).
+    """
+    image = ensure_rgb(image)
+    h, w = image.shape[:2]
+
+    scale = max(target_h / h, target_w / w)
+
+    new_h = int(np.ceil(h * scale))
+    new_w = int(np.ceil(w * scale))
+
+    resized = cv2.resize(
+        image,
+        (new_w, new_h),
+        interpolation=cv2.INTER_AREA
+    )
+
+    top = (new_h - target_h) // 2
+    left = (new_w - target_w) // 2
+
+    cropped = resized[
+        top:top + target_h,
+        left:left + target_w
+    ]
+
+    return cropped
+
+
+def match_to_reference(image, reference):
+    """
+    Match image to the reference image size using
+    resize + center crop.
+    """
+    target_h, target_w = reference.shape[:2]
+    return resize_and_center_crop(
+        image,
+        target_h,
+        target_w
+    )
+
+
+def vertical_mask(h, w, split_col=None):
+    """
+    White on the left, black on the right.
+    White selects image_a.
+    """
+    if split_col is None:
+        split_col = w // 2
+
+    mask = np.zeros((h, w), dtype=float)
+    mask[:, :split_col] = 1.0
+    return mask
+
+
+def ellipse_mask(
+    h,
+    w,
+    cx_frac=0.50,
+    cy_frac=0.48,
+    rx_frac=0.22,
+    ry_frac=0.30
+):
+    """
+    Elliptical irregular mask.
+    White region selects image_a.
+    """
+    Y, X = np.ogrid[:h, :w]
+
+    cx = cx_frac * w
+    cy = cy_frac * h
+    rx = rx_frac * w
+    ry = ry_frac * h
+
+    mask = (
+        ((X - cx) / rx) ** 2
+        +
+        ((Y - cy) / ry) ** 2
+        <= 1
+    ).astype(float)
+
+    return mask
+
+
+def save_blend_debug(
+    prefix,
+    mask_stack,
+    masked_a_levels,
+    masked_b_levels,
+    blended_levels
+):
+    """
+    Save the multiresolution process for webpage/report.
+    """
+    levels = len(mask_stack)
+
+    for i in range(levels):
+        save_gray(
+            f"{prefix}_mask_level_{i}.jpg",
+            mask_stack[i]
+        )
+
+        if i == levels - 1:
+            save_color(
+                f"{prefix}_A_masked_level_{i}.jpg",
+                masked_a_levels[i]
+            )
+            save_color(
+                f"{prefix}_B_masked_level_{i}.jpg",
+                masked_b_levels[i]
+            )
+            save_color(
+                f"{prefix}_blended_level_{i}.jpg",
+                blended_levels[i]
+            )
+        else:
+            save_color(
+                f"{prefix}_A_masked_level_{i}.jpg",
+                normalize_signed_color(masked_a_levels[i])
+            )
+            save_color(
+                f"{prefix}_B_masked_level_{i}.jpg",
+                normalize_signed_color(masked_b_levels[i])
+            )
+            save_color(
+                f"{prefix}_blended_level_{i}.jpg",
+                normalize_signed_color(blended_levels[i])
+            )
