@@ -1254,3 +1254,192 @@ print(
 print(
     "Saved Part 2.1 results to outputs/part2_1/"
 )
+
+def run_hybrid_example(
+    high_path,
+    low_path,
+    high_name,
+    low_name,
+    sigma_high,
+    sigma_low,
+    out_prefix
+):
+    high_img = ensure_rgb(io.imread(high_path))
+    low_img = ensure_rgb(io.imread(low_path))
+
+    print(f"\nAligning {high_name} (high) with {low_name} (low)")
+    print(f"Select {high_name}'s two eyes first.")
+    print(f"Then select {low_name}'s corresponding two eyes in the same order.")
+
+    high_aligned, low_aligned = align_images(high_img, low_img)
+
+    hybrid, low_freq, high_freq = hybrid_image(
+        high_aligned,
+        low_aligned,
+        sigma_high,
+        sigma_low
+    )
+
+    save_color(
+        f"outputs/part2_2/{out_prefix}_{high_name.lower()}_aligned.jpg",
+        high_aligned
+    )
+
+    save_color(
+        f"outputs/part2_2/{out_prefix}_{low_name.lower()}_aligned.jpg",
+        low_aligned
+    )
+
+    save_color(
+        f"outputs/part2_2/{out_prefix}_{low_name.lower()}_low_frequency.jpg",
+        low_freq
+    )
+
+    save_color(
+        f"outputs/part2_2/{out_prefix}_{high_name.lower()}_high_frequency.jpg",
+        normalize_signed_color(high_freq)
+    )
+
+    save_color(
+        f"outputs/part2_2/{out_prefix}_hybrid.jpg",
+        hybrid
+    )
+
+    far_view = cv2.resize(
+        hybrid,
+        None,
+        fx=0.18,
+        fy=0.18,
+        interpolation=cv2.INTER_AREA
+    )
+
+    save_color(
+        f"outputs/part2_2/{out_prefix}_far.jpg",
+        far_view
+    )
+
+    print(
+        f"{high_name} high-pass sigma = {sigma_high}"
+    )
+    print(
+        f"{low_name} low-pass sigma = {sigma_low}"
+    )
+    print(
+        f"Saved {out_prefix} results to outputs/part2_2/"
+    )
+
+# PART 2.2 — HYBRID IMAGES
+
+print("\n--- PART 2.2: HYBRID IMAGES ---")
+
+os.makedirs("outputs/part2_2", exist_ok=True)
+
+
+# Derek = high frequencies
+# Nutmeg = low frequencies
+
+derek = ensure_rgb(
+    io.imread("DerekPicture.jpg")
+)
+
+nutmeg = ensure_rgb(
+    io.imread("nutmeg.jpg")
+)
+
+print("Select Derek's two eyes.")
+print("Then select Nutmeg's corresponding two eyes in the same order.")
+
+
+nutmeg_aligned, derek_aligned = align_images(
+    nutmeg,
+    derek
+)
+
+#nutmeg_aligned, derek_aligned = crop_to_common_valid_area(
+#    nutmeg_aligned,
+#    derek_aligned
+#)
+
+
+# Starting cutoff guesses
+sigma_high = 2
+sigma_low = 8
+
+
+hybrid, nutmeg_low, derek_high = hybrid_image(
+    derek_aligned,
+    nutmeg_aligned,
+    sigma_high,
+    sigma_low
+)
+
+edward_batman = run_hybrid_pair(
+    name="edward_batman",
+    high_path="edward2.jpg",
+    low_path="batman2.jpg",
+    sigma_high=2,
+    sigma_low=4
+)
+
+zendaya_mona = run_hybrid_pair(
+    name="zendaya_mona_lisa",
+    high_path="zendaya2.jpg",
+    low_path="Mona_Lisa.jpg",
+    sigma_high=5,
+    sigma_low=4
+)
+
+
+
+save_color(
+    "outputs/part2_2/derek_aligned.jpg",
+    derek_aligned
+)
+
+save_color(
+    "outputs/part2_2/nutmeg_aligned.jpg",
+    nutmeg_aligned
+)
+
+save_color(
+    "outputs/part2_2/nutmeg_low_frequency.jpg",
+    nutmeg_low
+)
+
+save_color(
+    "outputs/part2_2/derek_high_frequency.jpg",
+    normalize_signed_color(derek_high)
+)
+
+save_color(
+    "outputs/part2_2/derek_nutmeg_hybrid.jpg",
+    hybrid
+)
+
+
+# Make a tiny version to simulate viewing from far away
+far_view = cv2.resize(
+    hybrid,
+    None,
+    fx=0.18,
+    fy=0.18,
+    interpolation=cv2.INTER_AREA
+)
+
+save_color(
+    "outputs/part2_2/derek_nutmeg_far.jpg",
+    far_view
+)
+
+
+print(
+    f"Derek high-pass sigma = {sigma_high}"
+)
+
+print(
+    f"Nutmeg low-pass sigma = {sigma_low}"
+)
+
+print(
+    "Saved Derek + Nutmeg hybrid to outputs/part2_2/"
+)
