@@ -210,3 +210,73 @@ save_gray(
 )
 
 print("\nSaved Part 1.1 images to outputs/part1/")
+
+
+# PART 1.2 FINITE DIFFERENCE OPERATORS
+
+print("\n--- PART 1.2: FINITE DIFFERENCE OPERATORS ---")
+
+# Standard Cameraman test image
+cameraman = img_as_float(data.camera())
+
+# Compute partial derivatives
+camera_dx = convolve2d(
+    cameraman,
+    Dx,
+    mode="same",
+    boundary="fill",
+    fillvalue=0
+)
+
+camera_dy = convolve2d(
+    cameraman,
+    Dy,
+    mode="same",
+    boundary="fill",
+    fillvalue=0
+)
+
+# Gradient magnitude
+gradient_magnitude = np.sqrt(camera_dx**2 + camera_dy**2)
+
+# Normalize only for visualization
+gradient_display = gradient_magnitude / np.max(gradient_magnitude)
+
+
+# Threshold gradient magnitude to produce binary edges
+
+threshold = 0.20
+
+binary_edges = gradient_display > threshold
+
+
+
+save_gray(
+    "outputs/part1/cameraman_original.jpg",
+    cameraman
+)
+
+save_gray(
+    "outputs/part1/cameraman_dx.jpg",
+    camera_dx,
+    signed=True
+)
+
+save_gray(
+    "outputs/part1/cameraman_dy.jpg",
+    camera_dy,
+    signed=True
+)
+
+save_gray(
+    "outputs/part1/cameraman_gradient_magnitude.jpg",
+    gradient_display
+)
+
+save_gray(
+    "outputs/part1/cameraman_edges.jpg",
+    binary_edges.astype(float)
+)
+
+print(f"Edge threshold: {threshold}")
+print("Saved Part 1.2 images to outputs/part1/")
