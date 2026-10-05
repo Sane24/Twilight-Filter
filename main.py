@@ -1443,3 +1443,65 @@ print(
 print(
     "Saved Derek + Nutmeg hybrid to outputs/part2_2/"
 )
+
+# PART 2.2 BELLS & WHISTLES: COLOR COMPARISON
+
+derek_gray_rgb = ensure_rgb(
+    color.rgb2gray(derek_aligned)
+)
+
+nutmeg_gray_rgb = ensure_rgb(
+    color.rgb2gray(nutmeg_aligned)
+)
+
+# 1. Color in both components
+hybrid_both_color, _, _ = hybrid_image(
+    derek_aligned,
+    nutmeg_aligned,
+    sigma_high,
+    sigma_low
+)
+
+# 2. Color only in low-frequency Nutmeg
+hybrid_low_color, _, _ = hybrid_image(
+    derek_gray_rgb,
+    nutmeg_aligned,
+    sigma_high,
+    sigma_low
+)
+
+# 3. Color only in high-frequency Derek
+hybrid_high_color, _, _ = hybrid_image(
+    derek_aligned,
+    nutmeg_gray_rgb,
+    sigma_high,
+    sigma_low
+)
+
+# 4. Fully grayscale baseline
+hybrid_gray, _, _ = hybrid_image(
+    derek_gray_rgb,
+    nutmeg_gray_rgb,
+    sigma_high,
+    sigma_low
+)
+
+save_color(
+    "outputs/part2_2/color_both.jpg",
+    hybrid_both_color
+)
+
+save_color(
+    "outputs/part2_2/color_low_only.jpg",
+    hybrid_low_color
+)
+
+save_color(
+    "outputs/part2_2/color_high_only.jpg",
+    hybrid_high_color
+)
+
+save_color(
+    "outputs/part2_2/color_grayscale.jpg",
+    hybrid_gray
+)
