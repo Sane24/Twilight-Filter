@@ -10,6 +10,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap">
   <link rel="stylesheet" href="./styles.css">
+  <script>document.documentElement.classList.add("js");</script>
   <script src="./script.js" defer></script>
 </head>
 <body>
@@ -49,13 +50,20 @@
       </ol>
     </nav>
   </div>
+  <div class="nightfall" aria-hidden="true"><span class="nightfall__bar"></span></div>
 </header>
 
 <!-- ============================================================
      HERO
      ============================================================ -->
-<section class="hero" id="top" aria-labelledby="title">
-  <div class="hero__moon" aria-hidden="true"></div>
+<section class="hero" id="top" aria-labelledby="title" data-ambient>
+  <div class="hero__sky" aria-hidden="true">
+    <div class="sky-dusk"></div>
+    <div class="sky-stars"></div>
+    <div class="hero__sun"></div>
+    <div class="hero__moon"></div>
+    <div class="rain rain--hero"><div class="rain__layer rain__layer--far"></div><div class="rain__layer rain__layer--near"></div></div>
+  </div>
   <div class="hero__inner">
     <div class="hero__text">
       <p class="hero__kicker">UC Berkeley CS180 · Project 2 · Fall 2026</p>
@@ -95,8 +103,9 @@
     </defs>
     <path class="hz-back" d="M0,120 0,54 5,79 9,91 14,69 15,69 21,99 25,90 29,75 30,75 31,81 37,96 44,60 50,88 55,66 60,86 63,79 68,58 72,78 75,84 82,55 87,78 89,82 93,70 98,90 102,73 106,90 114,46 118,70 122,84 127,59 132,86 136,68 140,86 141,88 142,87 146,64 152,97 154,101 161,70 165,88 168,95 176,59 181,80 184,85 190,52 193,75 196,85 203,59 209,85 214,55 220,91 226,65 232,96 240,64 241,64 245,82 247,85 254,56 258,79 262,91 267,71 268,71 271,87 272,89 273,88 278,61 285,100 294,68 298,81 301,72 305,46 310,74 311,64 315,48 324,92 330,57 334,80 340,47 341,47 346,74 351,47 355,72 359,86 364,63 370,89 371,83 373,80 374,74 375,74 380,92 387,58 394,96 397,91 401,73 405,89 410,71 415,88 416,90 417,89 420,81 424,61 431,96 439,63 443,83 446,90 453,64 460,94 467,45 475,97 483,75 484,81 490,96 493,89 497,71 504,95 505,96 508,90 512,74 518,94 526,60 527,60 533,86 537,68 541,87 543,83 547,64 552,83 555,89 560,65 567,97 568,89 571,82 576,60 582,84 589,59 593,79 596,87 599,79 603,56 607,80 610,90 613,83 618,61 623,83 627,62 628,62 635,97 643,66 649,88 653,75 657,52 665,94 669,83 673,65 679,91 683,73 690,101 700,42 752,42 753,92 758,112 759,34 772,34 773,19 799,19 800,34 811,34 812,120 816,120 817,78 844,78 845,120 846,120 847,70 855,70 856,61 872,61 873,70 893,71 894,63 916,63 917,71 926,71 927,31 937,31 938,15 955,15 956,31 963,31 964,120 968,120 969,48 1016,48 1017,120 1020,120 1021,38 1047,38 1048,120 1052,120 1053,62 1080,62 1081,120 1082,39 1128,39 1129,120 1133,120 1134,74 1155,53 1162,48 1186,72 1187,120 1191,120 1192,50 1201,50 1202,38 1217,38 1218,50 1224,50 1225,120 1228,120 1229,46 1236,46 1237,32 1251,32 1252,46 1257,46 1258,120 1262,120 1263,64 1290,32 1315,61 1316,120 1321,120 1322,72 1377,72 1378,120 1381,120 1382,51 1414,51 1415,120 1416,120 1417,56 1426,56 1427,45 1439,45 1439,120Z"/>
     <path class="hz-front" fill="url(#hz-front)" d="M0,120 0,82 5,105 8,113 17,69 24,104 30,78 36,104 37,105 43,84 47,99 54,71 61,103 63,102 67,92 73,106 78,90 82,103 89,66 95,100 102,68 108,98 114,81 121,105 127,74 128,74 133,103 135,107 145,70 148,86 155,109 161,84 162,84 169,112 177,72 182,101 186,92 189,78 200,115 208,91 216,114 226,74 236,112 246,65 256,106 257,106 264,81 269,98 276,70 283,101 286,107 293,80 300,107 307,93 314,109 316,106 323,83 331,109 340,82 351,116 359,82 368,116 377,64 384,106 394,68 401,99 405,91 411,103 416,89 423,108 431,72 439,115 440,115 450,87 455,101 458,93 460,81 461,81 466,106 467,106 474,85 481,107 488,93 496,110 499,112 507,65 515,109 521,87 526,104 531,79 534,93 537,99 543,67 549,98 552,90 555,73 563,108 570,86 578,109 581,102 586,79 587,79 596,115 604,68 607,79 612,73 622,85 623,106 628,94 629,98 631,99 635,87 639,96 641,92 652,120 657,120 658,91 672,77 684,89 685,120 688,120 689,91 703,76 714,88 715,107 720,97 731,120 732,120 733,97 746,83 757,95 758,120 761,120 762,94 772,80 781,92 782,98 786,82 795,116 805,85 813,115 816,120 819,120 820,81 837,81 838,74 871,74 872,81 887,81 888,120 889,120 890,85 922,65 953,84 954,120 955,67 1006,67 1007,120 1009,120 1010,60 1017,60 1018,49 1032,49 1033,60 1039,60 1040,120 1041,120 1042,77 1071,54 1074,55 1100,76 1109,72 1110,50 1128,12 1145,48 1146,71 1152,75 1153,120 1154,73 1166,73 1167,64 1190,64 1191,73 1201,73 1202,89 1255,89 1256,120 1258,120 1259,81 1279,58 1296,78 1297,120 1299,120 1300,66 1313,66 1314,56 1339,56 1340,66 1351,66 1352,120 1354,120 1355,71 1370,71 1371,62 1402,62 1403,71 1416,71 1417,120 1418,120 1419,83 1439,67 1439,120Z"/>
-    <g class="hz-windows"><rect x="899" y="93" width="2" height="3"/><rect x="1314" y="91" width="2" height="3"/><rect x="904" y="96" width="2" height="3"/><rect x="1127" y="36" width="2" height="3"/><rect x="1276" y="74" width="2" height="3"/><rect x="1076" y="89" width="2" height="3"/><rect x="1099" y="100" width="2" height="3"/><rect x="1277" y="110" width="2" height="3"/><rect x="1014" y="96" width="2" height="3"/><rect x="1253" y="101" width="2" height="3"/><rect x="850" y="111" width="2" height="3"/><rect x="1023" y="74" width="2" height="3"/><rect x="1367" y="98" width="2" height="3"/><rect x="1123" y="93" width="2" height="3"/></g>
+    <g class="hz-windows"><rect x="855" y="101" width="2" height="3" style="--t:0.75"/><rect class="flicker" x="861" y="103" width="2" height="3" style="--t:0.29"/><rect class="flicker" x="861" y="113" width="2" height="3" style="--t:-0.02"/><rect x="863" y="80" width="2" height="3" style="--t:0.13"/><rect x="876" y="111" width="2" height="3" style="--t:0.38"/><rect x="881" y="87" width="2" height="3" style="--t:0.39"/><rect x="882" y="93" width="2" height="3" style="--t:0.8"/><rect x="885" y="103" width="2" height="3" style="--t:0.88"/><rect x="893" y="94" width="2" height="3" style="--t:0.2"/><rect x="899" y="101" width="2" height="3" style="--t:0.3"/><rect x="916" y="83" width="2" height="3" style="--t:0.15"/><rect x="917" y="110" width="2" height="3" style="--t:0.69"/><rect x="921" y="89" width="2" height="3" style="--t:0.13"/><rect x="931" y="93" width="2" height="3" style="--t:0.24"/><rect x="933" y="107" width="2" height="3" style="--t:0.57"/><rect x="940" y="94" width="2" height="3" style="--t:0.06"/><rect x="949" y="88" width="2" height="3" style="--t:-0.02"/><rect x="956" y="91" width="2" height="3" style="--t:0.31"/><rect x="965" y="98" width="2" height="3" style="--t:0.34"/><rect class="flicker" x="980" y="99" width="2" height="3" style="--t:0.56"/><rect x="991" y="78" width="2" height="3" style="--t:0.46"/><rect x="995" y="86" width="2" height="3" style="--t:0.36"/><rect class="flicker" x="1003" y="92" width="2" height="3" style="--t:0.83"/><rect x="1035" y="98" width="2" height="3" style="--t:0.4"/><rect x="1036" y="72" width="2" height="3" style="--t:0.37"/><rect x="1046" y="113" width="2" height="3" style="--t:0.15"/><rect x="1049" y="95" width="2" height="3" style="--t:0.26"/><rect x="1054" y="75" width="2" height="3" style="--t:-0.01"/><rect x="1059" y="107" width="2" height="3" style="--t:0.56"/><rect x="1063" y="67" width="2" height="3" style="--t:0.19"/><rect x="1081" y="100" width="2" height="3" style="--t:0.21"/><rect x="1090" y="100" width="2" height="3" style="--t:0.18"/><rect x="1101" y="94" width="2" height="3" style="--t:0.08"/><rect x="1147" y="110" width="2" height="3" style="--t:-0.08"/><rect x="1157" y="80" width="2" height="3" style="--t:0.13"/><rect x="1164" y="100" width="2" height="3" style="--t:-0.06"/><rect x="1241" y="97" width="2" height="3" style="--t:-0.01"/><rect x="1243" y="110" width="2" height="3" style="--t:0.52"/><rect class="flicker" x="1251" y="109" width="2" height="3" style="--t:0.57"/><rect x="1262" y="101" width="2" height="3" style="--t:0.92"/><rect x="1265" y="88" width="2" height="3" style="--t:0.05"/><rect x="1267" y="106" width="2" height="3" style="--t:0.17"/><rect x="1277" y="70" width="2" height="3" style="--t:0.02"/><rect x="1304" y="104" width="2" height="3" style="--t:0.11"/><rect class="flicker" x="1307" y="93" width="2" height="3" style="--t:0.58"/><rect x="1309" y="107" width="2" height="3" style="--t:0.78"/><rect x="1310" y="80" width="2" height="3" style="--t:0.88"/><rect x="1322" y="90" width="2" height="3" style="--t:0.43"/><rect x="1341" y="108" width="2" height="3" style="--t:0.06"/><rect x="1344" y="83" width="2" height="3" style="--t:0.6"/><rect x="1348" y="90" width="2" height="3" style="--t:0.44"/><rect x="1380" y="105" width="2" height="3" style="--t:0.87"/><rect x="1389" y="104" width="2" height="3" style="--t:0.89"/><rect x="1413" y="89" width="2" height="3" style="--t:0.61"/></g>
   </svg>
+  <div class="fog" aria-hidden="true"></div>
 </section>
 
 <main id="main">
@@ -132,7 +141,8 @@
 <!-- ============================================================
      PART 1 — FILTERS AND EDGES
      ============================================================ -->
-<header class="chapter chapter--rain" id="part1" data-nav="part1">
+<header class="chapter chapter--rain" id="part1" data-nav="part1" data-ambient>
+  <div class="rain" aria-hidden="true"><div class="rain__layer rain__layer--far"></div><div class="rain__layer rain__layer--near"></div></div>
   <div class="wrap chapter__inner">
     <p class="chapter__num" aria-hidden="true">I</p>
     <div>
@@ -405,7 +415,23 @@ output = np.zeros_like(image, dtype=float)
 <!-- ============================================================
      PART 2 — APPLICATIONS
      ============================================================ -->
-<header class="chapter chapter--night" id="part2" data-nav="s2-1">
+<header class="chapter chapter--night" id="part2" data-nav="s2-1" data-ambient>
+  <div class="signal" aria-hidden="true">
+    <div class="signal__rig">
+      <div class="signal__beam"></div>
+      <svg class="signal__emblem" viewBox="0 0 240 140" focusable="false">
+        <defs>
+          <radialGradient id="sig-glow">
+            <stop offset="0" stop-color="#f6ecc4" stop-opacity=".95"/>
+            <stop offset=".72" stop-color="#e9d79a" stop-opacity=".5"/>
+            <stop offset="1" stop-color="#e9d79a" stop-opacity="0"/>
+          </radialGradient>
+        </defs>
+        <ellipse cx="120" cy="70" rx="118" ry="68" fill="url(#sig-glow)"/>
+        <path transform="translate(30 22) scale(.9)" fill="#111215" fill-opacity=".9" d="M100,80 L106,86 Q114,66 126,72 Q137,58 148,66 Q159,50 170,60 Q180,46 190,50 L196,34 C182,24 166,20 150,22 C132,24 118,30 110,34 L106,20 L100,30 L94,20 L90,34 C82,30 68,24 50,22 C34,20 18,24 4,34 L10,50 Q20,46 30,60 Q41,50 52,66 Q63,58 74,72 Q86,66 94,86 Z"/>
+      </svg>
+    </div>
+  </div>
   <div class="wrap chapter__inner">
     <p class="chapter__num" aria-hidden="true">II</p>
     <div>
@@ -702,9 +728,16 @@ output = np.zeros_like(image, dtype=float)
 
     <div class="wide eb">
       <figure class="fig eb__hybrid">
-        <img src="./outputs/part2_2/edward_batman_hybrid.jpg" width="540" height="720" loading="lazy"
-             alt="Edward and Batman hybrid at full size: Edward's face, hair and jacket in sharp detail, darkened by the blurred shapes of Batman's cowl and armor.">
-        <figcaption><span class="tag">2.2g</span> Hybrid, full size. Up close: Edward.</figcaption>
+        <div class="distance-stage">
+          <img src="./outputs/part2_2/edward_batman_hybrid.jpg" width="540" height="720" loading="lazy"
+               alt="Edward and Batman hybrid at full size: Edward's face, hair and jacket in sharp detail, darkened by the blurred shapes of Batman's cowl and armor.">
+        </div>
+        <div class="distance" hidden>
+          <label for="eb-distance">Step back</label>
+          <input type="range" id="eb-distance" min="0" max="92" step="1" value="0">
+          <output for="eb-distance" aria-live="polite">100% size · Edward</output>
+        </div>
+        <figcaption><span class="tag">2.2g</span> Hybrid, full size. Up close: Edward.<span class="screen-only"> Drag "step back" to shrink it and watch Batman take over.</span></figcaption>
       </figure>
 
       <div class="eb__text">
@@ -1092,9 +1125,16 @@ result = np.sum(np.stack(blended_levels), axis=<span class="n">0</span>)</code><
     </div>
 
     <figure class="fig cowl-hero">
-      <img src="./outputs/part2_4/edward_batman_final.jpg" width="700" height="525" loading="lazy"
-           alt="Multiresolution blend: Edward Cullen's pale face and teal jacket set inside Batman's black cowl and cape, the cowl's pointed ears rising out of Edward's hair, against an orange Gotham dusk.">
-      <figcaption><span class="tag">2.4k</span> Final multiresolution blend. Batman outside the ellipse, Edward inside.</figcaption>
+      <div class="wipe">
+        <img src="./outputs/part2_4/edward_batman_final.jpg" width="700" height="525" loading="lazy"
+             alt="Multiresolution blend: Edward Cullen's pale face and teal jacket set inside Batman's black cowl and cape, the cowl's pointed ears rising out of Edward's hair, against an orange Gotham dusk.">
+        <img class="wipe__top" src="./outputs/part2_4/edward_batman_hard_mask.jpg" width="700" height="525" loading="lazy" alt="">
+        <span class="wipe__line" aria-hidden="true"></span>
+        <span class="wipe__label wipe__label--l" aria-hidden="true">Hard mask</span>
+        <span class="wipe__label wipe__label--r" aria-hidden="true">Multiresolution</span>
+        <input class="wipe__range" type="range" min="0" max="100" value="50" aria-label="Wipe between the hard-mask composite (left) and the multiresolution blend (right)">
+      </div>
+      <figcaption><span class="tag">2.4k</span> Final multiresolution blend. Batman outside the ellipse, Edward inside.<span class="screen-only"> Drag across the image to compare it with the hard mask.</span></figcaption>
     </figure>
 
     <div class="cowl-body">

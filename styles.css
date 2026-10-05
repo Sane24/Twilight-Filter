@@ -277,29 +277,6 @@ sub, sup { font-size: .72em; line-height: 0; }
   padding: clamp(56px, 8vw, 104px) 0 clamp(120px, 13vw, 180px);
 }
 
-/* fine rain over the Forks half only */
-.hero::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: repeating-linear-gradient(104deg, rgba(236, 230, 218, 0.035) 0 1px, transparent 1px 11px);
-  -webkit-mask-image: linear-gradient(90deg, #000 0%, #000 30%, transparent 58%);
-  mask-image: linear-gradient(90deg, #000 0%, #000 30%, transparent 58%);
-  pointer-events: none;
-}
-
-.hero__moon {
-  position: absolute;
-  left: 6%;
-  top: 11%;
-  width: clamp(40px, 4.6vw, 64px);
-  aspect-ratio: 1;
-  border-radius: 50%;
-  background: radial-gradient(circle at 36% 34%, rgba(236, 230, 218, 0.2), rgba(236, 230, 218, 0.09) 72%);
-  box-shadow: 0 0 48px 6px rgba(200, 214, 212, 0.07);
-  pointer-events: none;
-}
-
 .hero__inner {
   position: relative;
   z-index: 1;
@@ -430,7 +407,6 @@ sub, sup { font-size: .72em; line-height: 0; }
   pointer-events: none;
 }
 .hero__horizon .hz-back { fill: rgba(16, 24, 22, 0.55); }
-.hero__horizon .hz-windows { fill: rgba(201, 164, 79, 0.55); }
 
 
 /* --------------------------------------------------------------------------
@@ -1069,6 +1045,8 @@ table { border-collapse: collapse; }
 }
 
 .chapter__inner {
+  position: relative;
+  z-index: 1;
   display: grid;
   grid-template-columns: auto minmax(0, 1fr);
   gap: clamp(24px, 4vw, 56px);
@@ -1102,9 +1080,7 @@ table { border-collapse: collapse; }
 }
 
 .chapter--rain {
-  background:
-    repeating-linear-gradient(104deg, rgba(236, 230, 218, 0.04) 0 1px, transparent 1px 10px),
-    linear-gradient(160deg, #3e5154 0%, #2a3c37 45%, var(--forest) 100%);
+  background: linear-gradient(160deg, #3e5154 0%, #2a3c37 45%, var(--forest) 100%);
 }
 
 .chapter--night {
@@ -1418,6 +1394,342 @@ table { border-collapse: collapse; }
 .projects a[aria-current="page"] { box-shadow: inset 0 -1px 0 var(--crimson-light); }
 .projects__num { color: var(--gold); margin-right: .3em; }
 
+/* "nightfall": scroll progress under the nav, dusk colors fading to moonlight */
+.nightfall {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -1px;
+  height: 2px;
+  pointer-events: none;
+}
+.nightfall__bar {
+  position: relative;
+  display: block;
+  height: 100%;
+  width: calc(var(--page-p, 0) * 100%);
+  background: linear-gradient(90deg, #e9a066 0%, #c7716c 20%, #7b5a86 45%, #4f6290 70%, #a9bccf 100%) 0 0 / 100vw 100% no-repeat;
+}
+.nightfall__bar::after {
+  content: "";
+  position: absolute;
+  right: -4px;
+  top: 50%;
+  width: 8px;
+  height: 8px;
+  margin-top: -4px;
+  border-radius: 50%;
+  background: #ece6da;
+  box-shadow: 0 0 8px 2px rgba(236, 230, 218, 0.45);
+}
+
+/* hero: dusk over Forks turning into night over Gotham as you scroll (--p: 0 → 1) */
+.hero { --p: 0; }
+.hero__sky {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.sky-dusk {
+  position: absolute;
+  inset: 0;
+  opacity: calc(1 - var(--p));
+  background:
+    linear-gradient(100deg, transparent 42%, rgba(13, 14, 17, 0.5) 72%, rgba(10, 10, 12, 0.82) 100%),
+    radial-gradient(ellipse 48% 42% at 22% 100%, rgba(244, 166, 98, 0.6), rgba(208, 112, 98, 0.25) 48%, transparent 78%),
+    linear-gradient(180deg, #1c2440 0%, #29304f 36%, #4c4064 60%, #8a5762 80%, #c98058 100%);
+}
+.sky-stars {
+  position: absolute;
+  inset: 0 0 30% 0;
+  opacity: clamp(0, calc(var(--p) * 1.7 - .55), 1);
+  -webkit-mask-image: linear-gradient(180deg, #000 50%, transparent);
+  mask-image: linear-gradient(180deg, #000 50%, transparent);
+}
+.sky-stars::before,
+.sky-stars::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='210' height='210'%3E%3Cg fill='%23f1ede4'%3E%3Ccircle cx='171.1' cy='62.0' r='0.6' fill-opacity='0.9'/%3E%3Ccircle cx='61.7' cy='53.0' r='1.0' fill-opacity='0.93'/%3E%3Ccircle cx='69.9' cy='3.0' r='0.5' fill-opacity='0.68'/%3E%3Ccircle cx='77.0' cy='168.3' r='0.7' fill-opacity='0.74'/%3E%3Ccircle cx='92.4' cy='44.1' r='0.6' fill-opacity='0.51'/%3E%3Ccircle cx='13.9' cy='154.3' r='1.0' fill-opacity='0.79'/%3E%3Ccircle cx='32.1' cy='9.5' r='0.8' fill-opacity='0.74'/%3E%3Ccircle cx='67.9' cy='8.4' r='1.0' fill-opacity='0.6'/%3E%3Ccircle cx='208.4' cy='136.5' r='0.6' fill-opacity='0.69'/%3E%3Ccircle cx='51.3' cy='86.4' r='0.5' fill-opacity='0.56'/%3E%3Ccircle cx='93.2' cy='135.7' r='0.8' fill-opacity='0.87'/%3E%3Ccircle cx='104.7' cy='7.6' r='0.7' fill-opacity='0.58'/%3E%3Ccircle cx='110.3' cy='161.6' r='0.8' fill-opacity='0.88'/%3E%3C/g%3E%3C/svg%3E") 0 0 / 210px 210px;
+  animation: twinkle 5.5s ease-in-out infinite alternate;
+}
+.sky-stars::after {
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='330' height='330'%3E%3Cg fill='%23f1ede4'%3E%3Ccircle cx='47.5' cy='17.8' r='0.7' fill-opacity='0.73'/%3E%3Ccircle cx='325.9' cy='133.2' r='1.2' fill-opacity='0.78'/%3E%3Ccircle cx='260.4' cy='245.3' r='0.8' fill-opacity='0.64'/%3E%3Ccircle cx='142.1' cy='306.0' r='1.0' fill-opacity='0.9'/%3E%3Ccircle cx='304.3' cy='111.4' r='1.2' fill-opacity='0.69'/%3E%3Ccircle cx='296.4' cy='104.3' r='0.8' fill-opacity='0.71'/%3E%3Ccircle cx='215.8' cy='226.0' r='0.7' fill-opacity='0.62'/%3E%3Ccircle cx='129.6' cy='163.8' r='0.7' fill-opacity='0.93'/%3E%3Ccircle cx='220.2' cy='15.6' r='1.0' fill-opacity='0.51'/%3E%3Ccircle cx='318.7' cy='219.8' r='0.5' fill-opacity='0.89'/%3E%3Ccircle cx='226.6' cy='153.4' r='0.8' fill-opacity='0.82'/%3E%3C/g%3E%3C/svg%3E") 40px 70px / 330px 330px;
+  animation-duration: 7.5s;
+  animation-delay: -3s;
+}
+.hero__sun {
+  position: absolute;
+  left: 19%;
+  bottom: clamp(26px, 3.4vw, 46px);
+  width: clamp(64px, 7vw, 104px);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: radial-gradient(circle, #fff3cf 0 34%, #f8c27f 56%, rgba(248, 194, 127, 0) 71%);
+  box-shadow: 0 0 90px 36px rgba(238, 146, 92, 0.24);
+  opacity: calc(1 - var(--p) * .4);
+  transform: translateY(calc(var(--p) * 210px));
+}
+/* a waxing crescent (New Moon), rising from behind the Gotham skyline */
+.hero__moon {
+  position: absolute;
+  right: 11%;
+  bottom: clamp(80px, 10vw, 140px);
+  width: clamp(36px, 3.8vw, 54px);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: radial-gradient(circle at 38% 40%, #f4efe4 0 35%, #d6d0c3 75%);
+  -webkit-mask-image: radial-gradient(circle at 74% 38%, transparent 47%, #000 48.5%);
+  mask-image: radial-gradient(circle at 74% 38%, transparent 47%, #000 48.5%);
+  opacity: clamp(0, calc(var(--p) * 1.6), .92);
+  transform: translateY(calc((1 - var(--p)) * 120px));
+}
+.hero__horizon .hz-windows rect {
+  fill: #e7b863;
+  opacity: clamp(0, calc((var(--p) - var(--t, .5)) * 7), .9);
+}
+.hero__horizon .hz-windows .flicker { animation: flicker 7s steps(1, end) infinite; }
+.hero__horizon .hz-windows .flicker:nth-of-type(3n) { animation-duration: 11s; animation-delay: -4s; }
+.hero__horizon .hz-windows .flicker:nth-of-type(3n+1) { animation-duration: 9s; animation-delay: -2s; }
+
+.fog {
+  position: absolute;
+  left: -30%;
+  width: 160%;
+  bottom: -20px;
+  height: clamp(100px, 13vw, 190px);
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 22% 45% at 18% 72%, rgba(206, 216, 214, 0.16), transparent 70%),
+    radial-gradient(ellipse 18% 38% at 42% 82%, rgba(206, 216, 214, 0.12), transparent 70%),
+    radial-gradient(ellipse 24% 40% at 70% 78%, rgba(190, 196, 200, 0.08), transparent 70%),
+    radial-gradient(ellipse 16% 34% at 90% 70%, rgba(190, 196, 200, 0.06), transparent 70%);
+  animation: fog-drift 38s ease-in-out infinite alternate;
+}
+
+/* Forks rain: two tiled layers of streaks falling at different speeds */
+.rain {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+.rain--hero {
+  opacity: .7;
+  -webkit-mask-image: linear-gradient(90deg, #000 0%, #000 30%, transparent 60%);
+  mask-image: linear-gradient(90deg, #000 0%, #000 30%, transparent 60%);
+}
+.chapter--rain .rain { opacity: .6; }
+.rain__layer {
+  position: absolute;
+  left: -20%;
+  right: -20%;
+  top: -240px;
+  bottom: -240px;
+  will-change: transform;
+}
+.rain__layer--far {
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cg stroke='rgba(236,230,218,0.4)' stroke-width='0.8' stroke-linecap='round'%3E%3Cline x1='37.4' y1='4.6' x2='37.4' y2='16.5'/%3E%3Cline x1='7.4' y1='30.4' x2='7.4' y2='41.2'/%3E%3Cline x1='64.0' y1='37.4' x2='64.0' y2='47.2'/%3E%3Cline x1='117.7' y1='45.7' x2='117.7' y2='53.9'/%3E%3Cline x1='25.5' y1='29.9' x2='25.5' y2='40.7'/%3E%3Cline x1='43.3' y1='34.5' x2='43.3' y2='46.0'/%3E%3Cline x1='66.8' y1='10.8' x2='66.8' y2='23.2'/%3E%3Cline x1='9.1' y1='84.6' x2='9.1' y2='93.0'/%3E%3Cline x1='73.4' y1='36.6' x2='73.4' y2='45.0'/%3E%3Cline x1='22.6' y1='4.7' x2='22.6' y2='14.5'/%3E%3Cline x1='82.9' y1='101.8' x2='82.9' y2='114.2'/%3E%3Cline x1='87.2' y1='1.9' x2='87.2' y2='14.7'/%3E%3Cline x1='35.5' y1='82.3' x2='35.5' y2='95.1'/%3E%3Cline x1='49.6' y1='66.0' x2='49.6' y2='78.7'/%3E%3C/g%3E%3C/svg%3E") 0 0 / 120px 120px;
+  opacity: .6;
+  animation: rain-far 1.15s linear infinite;
+}
+.rain__layer--near {
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cg stroke='rgba(236,230,218,0.55)' stroke-width='1' stroke-linecap='round'%3E%3Cline x1='43.5' y1='64.9' x2='43.5' y2='80.1'/%3E%3Cline x1='29.3' y1='65.9' x2='29.3' y2='80.7'/%3E%3Cline x1='163.6' y1='118.9' x2='163.6' y2='142.5'/%3E%3Cline x1='41.1' y1='43.9' x2='41.1' y2='64.3'/%3E%3Cline x1='32.4' y1='35.1' x2='32.4' y2='50.4'/%3E%3Cline x1='165.2' y1='125.1' x2='165.2' y2='149.0'/%3E%3Cline x1='142.9' y1='50.4' x2='142.9' y2='66.7'/%3E%3Cline x1='112.3' y1='133.5' x2='112.3' y2='156.3'/%3E%3Cline x1='156.9' y1='99.3' x2='156.9' y2='114.3'/%3E%3Cline x1='120.2' y1='28.3' x2='120.2' y2='48.4'/%3E%3Cline x1='85.4' y1='153.2' x2='85.4' y2='168.3'/%3E%3Cline x1='154.3' y1='47.6' x2='154.3' y2='68.2'/%3E%3Cline x1='162.0' y1='139.5' x2='162.0' y2='160.4'/%3E%3Cline x1='151.3' y1='65.8' x2='151.3' y2='85.9'/%3E%3Cline x1='107.4' y1='25.8' x2='107.4' y2='45.0'/%3E%3C/g%3E%3C/svg%3E") 0 0 / 180px 180px;
+  animation: rain-near .72s linear infinite;
+}
+
+/* Part 2: bat-signal over Gotham. Switches on when it scrolls into view. */
+.signal {
+  --sw: clamp(170px, 22vw, 300px);
+  position: absolute;
+  right: 6%;
+  top: 0;
+  bottom: 0;
+  width: var(--sw);
+  pointer-events: none;
+}
+.signal__rig {
+  position: absolute;
+  inset: 0;
+  transform-origin: 50% 100%;
+  animation: signal-sway 12s ease-in-out infinite alternate;
+}
+.signal__emblem {
+  position: absolute;
+  left: 0;
+  top: 8%;
+  width: 100%;
+  height: auto;
+  opacity: .78;
+}
+.signal__beam {
+  position: absolute;
+  left: 15%;
+  right: 15%;
+  top: calc(8% + var(--sw) * .29);
+  bottom: 0;
+  clip-path: polygon(0 0, 100% 0, 53% 100%, 47% 100%);
+  background: linear-gradient(0deg, rgba(246, 236, 196, 0.36), rgba(246, 236, 196, 0.1) 70%, rgba(246, 236, 196, 0.03));
+}
+.js .signal { opacity: 0; }
+.js .signal.is-lit { animation: signal-on 1.8s linear forwards; }
+
+/* 2.2: step back from the hybrid */
+.distance-stage {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  aspect-ratio: 540 / 720;
+  overflow: hidden;
+  border: 1px solid var(--fig-border);
+  background: var(--fig-bg);
+}
+.fig .distance-stage img {
+  flex: none;
+  width: 100%;
+  border: 0;
+}
+.distance {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 12px;
+  font: 400 .75rem/1 var(--mono);
+  color: var(--fg-muted);
+}
+.distance[hidden] { display: none; }
+.distance label {
+  flex: none;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+.distance input {
+  flex: 1;
+  min-width: 0;
+  accent-color: var(--gold);
+}
+.distance output {
+  flex: none;
+  min-width: 17ch;
+  text-align: right;
+  color: var(--fg);
+}
+
+/* 2.4: drag to compare the hard mask with the multiresolution blend */
+.wipe {
+  --w: 50%;
+  position: relative;
+}
+.wipe__top,
+.wipe__line,
+.wipe__label,
+.wipe__range { display: none; }
+.wipe.is-live .wipe__top {
+  display: block;
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  clip-path: inset(0 calc(100% - var(--w)) 0 0);
+}
+.wipe.is-live .wipe__line {
+  display: block;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: var(--w);
+  width: 2px;
+  margin-left: -1px;
+  background: rgba(236, 230, 218, 0.85);
+  pointer-events: none;
+}
+.wipe.is-live .wipe__line::after {
+  content: "\2039\203A";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 32px;
+  height: 32px;
+  margin: -16px 0 0 -16px;
+  border: 1.5px solid rgba(236, 230, 218, 0.9);
+  border-radius: 50%;
+  background: rgba(13, 14, 16, 0.6);
+  color: var(--ivory);
+  font: 500 15px/29px var(--mono);
+  text-align: center;
+  letter-spacing: 2px;
+}
+.wipe.is-live .wipe__label {
+  display: block;
+  position: absolute;
+  top: 10px;
+  padding: 5px 8px;
+  font: 500 .625rem/1 var(--mono);
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--ivory);
+  background: rgba(13, 14, 16, 0.72);
+  pointer-events: none;
+}
+.wipe__label--l { left: 10px; }
+.wipe__label--r { right: 10px; }
+.wipe.is-live .wipe__range {
+  display: block;
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  opacity: 0;
+  cursor: ew-resize;
+  touch-action: pan-y;
+}
+.wipe:focus-within {
+  outline: 2px solid var(--gold);
+  outline-offset: 3px;
+}
+
+.screen-only { display: none; }
+.js .screen-only { display: inline; }
+
+/* pause loops that are off screen */
+.js [data-ambient]:not(.is-active) *,
+.js [data-ambient]:not(.is-active) *::before,
+.js [data-ambient]:not(.is-active) *::after { animation-play-state: paused !important; }
+
+@keyframes twinkle { from { opacity: .35; } to { opacity: 1; } }
+@keyframes flicker {
+  0%, 100% { fill-opacity: 1; }
+  46% { fill-opacity: .2; }
+  48% { fill-opacity: 1; }
+  50% { fill-opacity: .35; }
+  52% { fill-opacity: 1; }
+}
+@keyframes fog-drift { from { transform: translateX(-6%); } to { transform: translateX(6%); } }
+@keyframes rain-far { from { transform: rotate(10deg) translateY(0); } to { transform: rotate(10deg) translateY(120px); } }
+@keyframes rain-near { from { transform: rotate(10deg) translateY(0); } to { transform: rotate(10deg) translateY(180px); } }
+@keyframes signal-sway { from { transform: rotate(-5deg); } to { transform: rotate(4deg); } }
+@keyframes signal-on {
+  0% { opacity: 0; }
+  8% { opacity: .7; }
+  12% { opacity: .1; }
+  20% { opacity: .85; }
+  24% { opacity: .3; }
+  38%, 100% { opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rain__layer,
+  .fog,
+  .sky-stars::before,
+  .sky-stars::after,
+  .signal__rig,
+  .hero__horizon .hz-windows .flicker { animation: none !important; }
+  .js .signal.is-lit { animation: none; opacity: 1; }
+}
+
 
 /* --------------------------------------------------------------------------
    Lightbox
@@ -1536,6 +1848,10 @@ table { border-collapse: collapse; }
   .theme-gotham {
     clip-path: polygon(0 40px, 42% 40px, 44.5% 0, 46.5% 25px, 53.5% 25px, 55.5% 0, 58% 40px, 100% 40px, 100% 100%, 0 100%);
   }
+
+  .signal { --sw: 150px; right: -4%; }
+  .signal__rig { opacity: .55; }
+  .hero__sun { left: 12%; }
 }
 
 @media screen and (max-width: 560px) {
@@ -1549,7 +1865,6 @@ table { border-collapse: collapse; }
   .topbar__nav { margin-left: 0; }
   .topbar__nav a { padding: 8px 8px; }
 
-  .hero__moon { left: auto; right: 9%; top: 5%; }
   .hero__far { margin-bottom: 3.6rem; }
   .hero__plate { max-width: 220px; }
 
@@ -1634,7 +1949,9 @@ table { border-collapse: collapse; }
   }
 
   .topbar, .skip, .lightbox,
-  .hero::before, .hero__moon, .hero__horizon,
+  .hero__sky, .hero__horizon, .fog, .rain, .signal, .nightfall,
+  .distance, .screen-only,
+  .wipe__top, .wipe__line, .wipe__label, .wipe__range,
   .chapter__num, .oraple-mark { display: none !important; }
 
   .projects { background: none; border-bottom: .75pt solid #c8c8c8; margin-bottom: 10pt; }
@@ -1643,6 +1960,9 @@ table { border-collapse: collapse; }
   .projects a[aria-current="page"] { box-shadow: none; text-decoration: underline; }
   .projects__label { color: #4a4a4a; }
   .projects__num { color: #7a1a26; }
+
+  .distance-stage { border: 0; background: none; aspect-ratio: auto; }
+  .fig .distance-stage img { width: 100% !important; border: 1px solid #b9b9b9; }
 
   a { text-decoration: none; color: inherit; }
   a[href]::after { content: none !important; }
