@@ -1197,16 +1197,8 @@ table { border-collapse: collapse; }
 .label-note { color: var(--fg-2); }
 .gallery__far { margin-top: 1rem; }
 
-.museum-row img {
-  aspect-ratio: 720 / 745;
-  object-fit: cover;
-  object-position: 50% 15%;
-}
-.fig--rejected img {
-  filter: grayscale(.55);
-  opacity: .85;
-}
-.fig--rejected .tag { color: var(--fg-muted); text-decoration: line-through; }
+.museum-row { max-width: 760px; }
+.museum-row img { aspect-ratio: 720 / 745; }
 
 .spectra { padding-top: .6rem; border-top: 1px solid var(--rule); }
 .spectra__label {
@@ -1563,7 +1555,6 @@ table { border-collapse: collapse; }
 
   .grid--3 { grid-template-columns: minmax(0, 1fr); }
   .grid--5 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .museum-row .fig--rejected { grid-column: 1 / -1; max-width: 50%; }
 
   .mosaic-1-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .mosaic__lead { grid-column: 1 / -1; grid-row: auto; }
@@ -1844,7 +1835,8 @@ table { border-collapse: collapse; }
 
   /* 2.2 museum: keep the spectra on the same page */
   .gallery__work img { max-height: 3.5in; }
-  .museum-row .fig img { max-height: 1.45in; }
+  .museum-row { max-width: 4.6in; }
+  .museum-row .fig img { max-height: 2.05in; }
   .spectra .fig img { max-height: 1.05in; }
   .spectra { break-inside: avoid; }
 
