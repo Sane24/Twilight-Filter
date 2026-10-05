@@ -1982,3 +1982,135 @@ print(
     "Saved Oraple and multiresolution stack visualization "
     "to outputs/part2_4/"
 )
+
+
+
+# 2.4B — CUSTOM BLEND 1
+# Desperate Man + Get Out (vertical seam)
+
+desperate_blend = ensure_rgb(io.imread("desperateman.jpg"))
+getout_blend = ensure_rgb(io.imread("getout.jpg"))
+
+getout_blend = align_to_reference(
+    getout_blend,
+    desperate_blend
+)
+
+h, w = desperate_blend.shape[:2]
+
+# Left = Desperate Man, Right = Get Out
+desperate_getout_mask = vertical_mask(h, w)
+
+desperate_getout_hard = (
+    desperate_getout_mask[:, :, None] * desperate_blend
+    +
+    (1.0 - desperate_getout_mask[:, :, None]) * getout_blend
+)
+
+save_gray(
+    "outputs/part2_4/desperate_getout_mask.jpg",
+    desperate_getout_mask
+)
+
+save_color(
+    "outputs/part2_4/desperate_getout_hard_seam.jpg",
+    desperate_getout_hard
+)
+
+(
+    desperate_getout_final,
+    desperate_getout_mask_stack,
+    desperate_getout_lap_a,
+    desperate_getout_lap_b,
+    desperate_getout_a_masked,
+    desperate_getout_b_masked,
+    desperate_getout_blended_levels
+) = multiresolution_blend(
+    desperate_blend,
+    getout_blend,
+    desperate_getout_mask,
+    levels=blend_levels,
+    base_sigma=blend_base_sigma
+)
+
+save_color(
+    "outputs/part2_4/desperate_getout_final.jpg",
+    desperate_getout_final
+)
+
+save_blend_debug(
+    "outputs/part2_4/desperate_getout",
+    desperate_getout_mask_stack,
+    desperate_getout_a_masked,
+    desperate_getout_b_masked,
+    desperate_getout_blended_levels
+)
+
+
+# Edward + Batman (irregular mask)
+
+batman_blend = ensure_rgb(io.imread("batman.jpg"))
+edward_blend = ensure_rgb(io.imread("edward.jpg"))
+
+batman_blend = align_to_reference(
+    batman_blend,
+    edward_blend
+)
+
+h, w = edward_blend.shape[:2]
+
+# Elliptical region for Batman's face/cowl
+edward_batman_mask = ellipse_mask(
+    h,
+    w,
+    cx_frac=0.50,
+    cy_frac=0.45,
+    rx_frac=0.24,
+    ry_frac=0.34
+)
+
+edward_batman_hard = (
+    edward_batman_mask[:, :, None] * edward_blend
+    +
+    (1.0 - edward_batman_mask[:, :, None]) * batman_blend
+)
+save_gray(
+    "outputs/part2_4/edward_batman_mask.jpg",
+    edward_batman_mask
+)
+
+save_color(
+    "outputs/part2_4/edward_batman_hard_mask.jpg",
+    edward_batman_hard
+)
+
+(
+    edward_batman_final,
+    edward_batman_mask_stack,
+    edward_batman_lap_a,
+    edward_batman_lap_b,
+    edward_batman_a_masked,
+    edward_batman_b_masked,
+    edward_batman_blended_levels
+) = multiresolution_blend(
+    edward_blend,   # inside white mask
+    batman_blend,   # outside mask
+    edward_batman_mask,
+    levels=blend_levels,
+    base_sigma=blend_base_sigma
+)
+
+save_color(
+    "outputs/part2_4/edward_batman_final.jpg",
+    edward_batman_final
+)
+
+save_blend_debug(
+    "outputs/part2_4/edward_batman",
+    edward_batman_mask_stack,
+    edward_batman_a_masked,
+    edward_batman_b_masked,
+    edward_batman_blended_levels
+)
+
+print("Saved Part 2.4 results to outputs/part2_4/")
