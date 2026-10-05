@@ -108,6 +108,7 @@
         <tr><th scope="row">2.2</th><td>Derek / Nutmeg</td><td class="mono">σ<sub>high</sub> 2 · σ<sub>low</sub> 8</td></tr>
         <tr><th scope="row">2.2</th><td>Edward / Batman</td><td class="mono">σ<sub>high</sub> 2 · σ<sub>low</sub> 4</td></tr>
         <tr><th scope="row">2.2</th><td>Zendaya / Mona Lisa</td><td class="mono">σ<sub>high</sub> 5 · σ<sub>low</sub> 4</td></tr>
+        <tr><th scope="row">2.2</th><td>Bells &amp; whistles</td><td class="mono">color: gray · high · low · both</td></tr>
         <tr><th scope="row">2.3–4</th><td>Stacks</td><td class="mono">5 levels · σ 0, 1, 2, 4, 8</td></tr>
       </tbody>
     </table>
@@ -608,6 +609,59 @@ output = np.zeros_like(image, dtype=float)
         <img src="./outputs/part2_2/derek_nutmeg_far.jpg" width="133" height="227" loading="lazy" alt="The Derek and Nutmeg hybrid at 18 percent scale, where it reads as a cat.">
         <figcaption><span class="tag">2.2f</span> Far: 18% scale, shown at its native 133 × 227 px. Mostly cat.</figcaption>
       </figure>
+    </div>
+
+    <!-- Bells & whistles: color in the hybrid -->
+    <div class="prose bw-head">
+      <h3 class="h-sub"><span class="bw-tag">Bells &amp; Whistles</span> Color in the hybrid</h3>
+      <p>Does color work better in the high-frequency component, the low-frequency component, or both? I rebuilt Derek + Nutmeg four ways with the same σ<sub>high</sub> = 2 and σ<sub>low</sub> = 8: grayscale everywhere, color only in Derek's high frequencies, color only in Nutmeg's low frequencies, and color in both. For the gray versions I ran the aligned image through <code>rgb2gray</code> and copied it into three channels, so every variant goes through the same <code>hybrid_image()</code>.</p>
+    </div>
+
+    <div class="wide bw-grid">
+      <figure class="fig">
+        <p class="alpha-label">Grayscale</p>
+        <img src="./outputs/part2_2/color_grayscale.jpg" width="737" height="1259" loading="lazy" alt="Grayscale hybrid of Derek and Nutmeg.">
+        <img class="bw-thumb" src="./outputs/part2_2/color_grayscale.jpg" width="737" height="1259" loading="lazy" alt="The grayscale hybrid at thumbnail size, reading as a gray cat.">
+        <figcaption><span class="tag">2.2·bw a</span> No color anywhere.</figcaption>
+      </figure>
+      <figure class="fig">
+        <p class="alpha-label">Color high only</p>
+        <img src="./outputs/part2_2/color_high_only.jpg" width="737" height="1259" loading="lazy" alt="Hybrid with color only in Derek's high frequencies; looks almost the same as the grayscale one.">
+        <img class="bw-thumb" src="./outputs/part2_2/color_high_only.jpg" width="737" height="1259" loading="lazy" alt="The color-high-only hybrid at thumbnail size, still a gray cat.">
+        <figcaption><span class="tag">2.2·bw b</span> Derek in color, Nutmeg gray. Barely different from (a).</figcaption>
+      </figure>
+      <figure class="fig fig--pick">
+        <p class="alpha-label">Color low only <span class="pick">my pick</span></p>
+        <img src="./outputs/part2_2/color_low_only.jpg" width="737" height="1259" loading="lazy" alt="Hybrid with color only in Nutmeg's low frequencies: orange fur, teal wall and brown ledge, with Derek's gray outlines on top.">
+        <img class="bw-thumb" src="./outputs/part2_2/color_low_only.jpg" width="737" height="1259" loading="lazy" alt="The color-low-only hybrid at thumbnail size, reading as a color photo of a cat.">
+        <figcaption><span class="tag">2.2·bw c</span> Derek gray, Nutmeg in color.</figcaption>
+      </figure>
+      <figure class="fig">
+        <p class="alpha-label">Color both</p>
+        <img src="./outputs/part2_2/color_both.jpg" width="737" height="1259" loading="lazy" alt="Hybrid with color in both components; nearly identical to the color-low-only version.">
+        <img class="bw-thumb" src="./outputs/part2_2/color_both.jpg" width="737" height="1259" loading="lazy" alt="The color-both hybrid at thumbnail size, the same as the color-low-only one.">
+        <figcaption><span class="tag">2.2·bw d</span> Both in color. Basically (c).</figcaption>
+      </figure>
+    </div>
+
+    <div class="wide grid grid--2 bw-crops">
+      <figure class="fig">
+        <div class="zoom" style="--x:.30; --y:.43; --w:.40; --ar:1.708; --ratio:2/1;">
+          <img src="./outputs/part2_2/color_grayscale.jpg" width="737" height="1259" loading="lazy" alt="Close crop of Derek's eyes in the grayscale hybrid.">
+        </div>
+        <figcaption><span class="tag">detail</span> Grayscale: Derek's eyes over the cat's.</figcaption>
+      </figure>
+      <figure class="fig">
+        <div class="zoom" style="--x:.30; --y:.43; --w:.40; --ar:1.708; --ratio:2/1;">
+          <img src="./outputs/part2_2/color_both.jpg" width="737" height="1259" loading="lazy" alt="Close crop of Derek's eyes in the color hybrid; his irises take on Nutmeg's yellow-green eye color.">
+        </div>
+        <figcaption><span class="tag">detail</span> Color: his irises pick up Nutmeg's yellow-green.</figcaption>
+      </figure>
+    </div>
+
+    <div class="prose">
+      <p>Color in the high frequencies does almost nothing. A σ = 2 high-pass only keeps details a few pixels wide, and Derek's colors (skin, shirt, the gray backdrop) change slowly across the photo, so they get thrown out along with the low frequencies. What's left is mostly brightness edges like his eyes, teeth and hairline, which look the same in gray.</p>
+      <p>Color in the low frequencies is what changes the picture. Nutmeg's orange fur, the teal wall and the brown ledge all survive the σ = 8 blur, so in the small copies the colored versions look like an actual photo of a cat instead of a gray one. "Both" looks basically the same as "low only" for the same reason the high-frequency color didn't matter. One side effect I noticed up close: Nutmeg's eyes sit right under Derek's after alignment, so in color his irises turn yellow-green. The trade-off is that a colorful cat competes a bit more with Derek's face up close, though his eyes and teeth still come through. So I'd put color in the low-frequency image, which in practice is the same as coloring both, and that's what my main hybrids already do.</p>
     </div>
   </div>
 </section>
