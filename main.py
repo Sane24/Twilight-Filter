@@ -1991,7 +1991,7 @@ print(
 desperate_blend = ensure_rgb(io.imread("desperateman.jpg"))
 getout_blend = ensure_rgb(io.imread("getout.jpg"))
 
-getout_blend = align_to_reference(
+getout_blend, _ = align_to_reference(
     getout_blend,
     desperate_blend
 )
@@ -2052,7 +2052,7 @@ save_blend_debug(
 batman_blend = ensure_rgb(io.imread("batman.jpg"))
 edward_blend = ensure_rgb(io.imread("edward.jpg"))
 
-batman_blend = align_to_reference(
+batman_blend, _ = align_to_reference(
     batman_blend,
     edward_blend
 )
