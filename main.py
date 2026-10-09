@@ -5,6 +5,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 from scipy.signal import convolve2d
+from scipy.interpolate import splprep, splev
 from skimage import io, color, img_as_float, data, transform as sktr
 from align_image_code import align_images
 
@@ -1814,6 +1815,32 @@ def ellipse_mask(
     ).astype(float)
 
     return mask
+
+
+def traced_mask(h, w, outline, smoothing=2.0, samples=400):
+    """
+    Irregular mask from an outline traced around a shape.
+
+    outline: (x, y) points as fractions of the width / height,
+    listed in order around the shape. A closed spline through the
+    points smooths out the corners before the shape is filled.
+    White region selects image_a.
+    """
+    pts = np.array(outline, dtype=float) * [w, h]
+
+    tck, _ = splprep(
+        [pts[:, 0], pts[:, 1]],
+        s=len(pts) * smoothing,
+        per=True
+    )
+
+    xs, ys = splev(np.linspace(0, 1, samples), tck)
+    contour = np.round(np.stack([xs, ys], axis=1)).astype(np.int32)
+
+    mask = np.zeros((h, w), dtype=np.uint8)
+    cv2.fillPoly(mask, [contour], 1)
+
+    return mask.astype(float)
 
 
 def save_blend_debug(
