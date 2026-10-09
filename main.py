@@ -1843,6 +1843,155 @@ def traced_mask(h, w, outline, smoothing=2.0, samples=400):
     return mask.astype(float)
 
 
+def place_onto(image, mask, src_points, dst_points, tilt_deg=0.0):
+    """
+    Resize, tilt and move image (and its mask) so src_points land on
+    dst_points as closely as possible. The tilt is chosen by hand;
+    the scale and shift are then the least-squares fit for that tilt.
+    Negative tilt turns the image counter-clockwise on screen.
+    Points are (x, y) fractions of the width / height.
+    """
+    h, w = image.shape[:2]
+
+    src = np.array(src_points, dtype=float) * [w, h]
+    dst = np.array(dst_points, dtype=float) * [w, h]
+
+    src_center = src.mean(axis=0)
+    dst_center = dst.mean(axis=0)
+
+    theta = np.radians(tilt_deg)
+    rotation = np.array([
+        [np.cos(theta), -np.sin(theta)],
+        [np.sin(theta), np.cos(theta)]
+    ])
+
+    rotated = (src - src_center) @ rotation.T
+
+    # least-squares scale between the two point sets
+    scale = np.sqrt(
+        np.sum((dst - dst_center) ** 2)
+        /
+        np.sum(rotated ** 2)
+    )
+
+    transform = sktr.SimilarityTransform(
+        scale=scale,
+        rotation=theta,
+        translation=dst_center - scale * (rotation @ src_center)
+    )
+
+    moved = sktr.warp(
+        image,
+        inverse_map=transform.inverse,
+        output_shape=(h, w),
+        mode="edge",
+        preserve_range=True
+    )
+
+    moved_mask = sktr.warp(
+        mask,
+        inverse_map=transform.inverse,
+        output_shape=(h, w),
+        order=1,
+        preserve_range=True
+    ) > 0.5
+
+    return moved, moved_mask.astype(float), transform
+
+
+def round_off_bottom(mask, cut_row, radius):
+    """
+    Cut mask off flat at cut_row, with the two bottom corners rounded
+    (quarter circles of the given radius), so the sides curve into the
+    flat edge instead of meeting it at a sharp corner.
+    """
+    h, w = mask.shape
+    mask = mask.copy()
+    mask[cut_row:, :] = 0.0
+
+    # how wide the mask is just above the cut
+    band = mask[cut_row - radius:cut_row] > 0.5
+    cols = np.nonzero(band.any(axis=0))[0]
+    left, right = cols.min(), cols.max()
+
+    Y, X = np.mgrid[:h, :w]
+    corner_y = cut_row - radius
+    in_band = (Y >= corner_y) & (Y < cut_row)
+
+    for cx, side in (
+        (left + radius, X < left + radius),
+        (right - radius, X > right - radius)
+    ):
+        outside = (X - cx) ** 2 + (Y - corner_y) ** 2 > radius ** 2
+        mask[in_band & side & outside] = 0.0
+
+    return mask
+
+
+def replace_background(image, silhouette, background, grow=3, sigma=2.0):
+    """
+    Keep image inside silhouette and use background everywhere else.
+    The silhouette is grown by a few pixels and feathered with a small
+    Gaussian, so the cut itself doesn't add a hard edge.
+    """
+    kernel = np.ones((2 * grow + 1, 2 * grow + 1), dtype=np.uint8)
+    grown = cv2.dilate(silhouette.astype(np.uint8), kernel).astype(float)
+
+    soft = convolve2d(
+        grown,
+        gaussian_kernel_from_sigma(sigma),
+        mode="same",
+        boundary="symm"
+    )
+
+    return soft[:, :, None] * image + (1.0 - soft[:, :, None]) * background
+
+
+def blend_and_save(image_a, image_b, mask, prefix, levels=5, base_sigma=1.0, debug=True):
+    """
+    Hard-mask composite + multiresolution blend of image_a (white part
+    of the mask) over image_b, saved as <prefix>_mask / _hard_mask /
+    _final, plus the per-level images when debug is True.
+    """
+    hard = (
+        mask[:, :, None] * image_a
+        +
+        (1.0 - mask[:, :, None]) * image_b
+    )
+
+    save_gray(f"{prefix}_mask.jpg", mask)
+    save_color(f"{prefix}_hard_mask.jpg", hard)
+
+    (
+        final,
+        mask_stack,
+        lap_a,
+        lap_b,
+        a_masked,
+        b_masked,
+        blended_levels
+    ) = multiresolution_blend(
+        image_a,
+        image_b,
+        mask,
+        levels=levels,
+        base_sigma=base_sigma
+    )
+
+    save_color(f"{prefix}_final.jpg", final)
+
+    if debug:
+        save_blend_debug(
+            prefix,
+            mask_stack,
+            a_masked,
+            b_masked,
+            blended_levels
+        )
+
+    return final
+
+
 def save_blend_debug(
     prefix,
     mask_stack,
