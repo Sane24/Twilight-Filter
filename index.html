@@ -1163,6 +1163,24 @@ result = np.sum(np.stack(blended_levels), axis=<span class="n">0</span>)</code><
       </div>
     </div>
 
+    <div class="first-try">
+      <p class="first-try__label">First attempt · oval mask, kept for comparison</p>
+      <div class="grid grid--3">
+        <figure class="fig fig--mask fig--mask-dark">
+          <img src="./outputs/part2_4/edward_batman_oval_mask.jpg" width="700" height="525" loading="lazy" alt="Oval mask: a white ellipse in the middle of a black frame.">
+          <figcaption><span class="tag">2.4p</span> Oval mask, 0.24w × 0.34h, centered at (0.50w, 0.45h).</figcaption>
+        </figure>
+        <figure class="fig">
+          <img src="./outputs/part2_4/edward_batman_oval_hard_mask.jpg" width="700" height="525" loading="lazy" alt="Hard-mask composite with the oval: Edward's head, hair and a ring of teal background pasted over Batman.">
+          <figcaption><span class="tag">2.4q</span> Hard mask: his hair and a ring of teal background come in with him.</figcaption>
+        </figure>
+        <figure class="fig">
+          <img src="./outputs/part2_4/edward_batman_oval_final.jpg" width="700" height="525" loading="lazy" alt="Multiresolution blend with the oval mask: Edward's head inside a soft teal circle, the bat ears sticking up out of his hair.">
+          <figcaption><span class="tag">2.4r</span> Multiresolution blend: softer, but still a teal circle around his head.</figcaption>
+        </figure>
+      </div>
+    </div>
+
     <div class="grid grid--2 cowl-compare">
       <figure class="fig">
         <div class="zoom" style="--x:.20; --y:.10; --w:.34; --ar:.75; --ratio:1/1;">

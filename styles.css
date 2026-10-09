@@ -1308,6 +1308,19 @@ table { border-collapse: collapse; }
   object-fit: cover;
 }
 
+.first-try {
+  margin: 0 0 clamp(36px, 4vw, 56px);
+  padding-top: clamp(20px, 2.4vw, 28px);
+  border-top: 1px solid var(--rule);
+}
+.first-try__label {
+  margin: 0 0 14px;
+  font: 500 .6875rem/1.4 var(--mono);
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--fg-muted);
+}
+
 .cowl-compare {
   max-width: 720px;
   margin: 0 auto clamp(40px, 5vw, 64px);
@@ -2184,6 +2197,8 @@ table { border-collapse: collapse; }
   .theme-cowl .scroller { break-before: auto; }
   .cowl-hero img { max-height: 3.1in; }
   .cowl-compare { max-width: 3.4in; margin-bottom: 8pt; }
+  .first-try { break-inside: avoid; margin-bottom: 10pt; padding-top: 8pt; }
+  .first-try .fig img { max-height: 1.5in; }
   .cowl-body { margin-bottom: 10pt; }
 
   .colophon { break-inside: avoid; }
