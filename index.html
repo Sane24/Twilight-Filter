@@ -1120,21 +1120,21 @@ result = np.sum(np.stack(blended_levels), axis=<span class="n">0</span>)</code><
 <section class="sec theme-cowl" id="blend-edward-batman" data-nav="s2-4" aria-labelledby="ec-h">
   <div class="wrap">
     <div class="cowl-head">
-      <p class="kicker">2.4 · Custom blend 2 · irregular mask</p>
+      <p class="kicker">2.4 · Custom blend 2 · irregular mask traced around his head</p>
       <h3 class="h-display" id="ec-h">Edward, inside the cowl</h3>
     </div>
 
     <figure class="fig cowl-hero">
       <div class="wipe">
         <img src="./outputs/part2_4/edward_batman_final.jpg" width="700" height="525" loading="lazy"
-             alt="Multiresolution blend: Edward Cullen's pale face and teal jacket set inside Batman's black cowl and cape, the cowl's pointed ears rising out of Edward's hair, against an orange Gotham dusk.">
+             alt="Multiresolution blend: Edward Cullen, tilted to match the cowl, with his hair filling the cowl under the bat ears and the top of his jacket fading into the cape, against an orange Gotham dusk.">
         <img class="wipe__top" src="./outputs/part2_4/edward_batman_hard_mask.jpg" width="700" height="525" loading="lazy" alt="">
         <span class="wipe__line" aria-hidden="true"></span>
         <span class="wipe__label wipe__label--l" aria-hidden="true">Hard mask</span>
         <span class="wipe__label wipe__label--r" aria-hidden="true">Multiresolution</span>
         <input class="wipe__range" type="range" min="0" max="100" value="50" aria-label="Wipe between the hard-mask composite (left) and the multiresolution blend (right)">
       </div>
-      <figcaption><span class="tag">2.4k</span> Final multiresolution blend. Batman outside the ellipse, Edward inside.<span class="screen-only"> Drag across the image to compare it with the hard mask.</span></figcaption>
+      <figcaption><span class="tag">2.4k</span> Final multiresolution blend. Edward (hair, face, collar and the top of his jacket) tilted 13° and centered in the cowl; Batman everywhere else.<span class="screen-only"> Drag across the image to compare it with the hard mask.</span></figcaption>
     </figure>
 
     <div class="cowl-body">
@@ -1155,11 +1155,11 @@ result = np.sum(np.stack(blended_levels), axis=<span class="n">0</span>)</code><
           <figcaption><span class="tag">2.4m</span> batman.jpg (B, outside).</figcaption>
         </figure>
         <figure class="fig fig--mask fig--mask-dark">
-          <img src="./outputs/part2_4/edward_batman_mask.jpg" width="700" height="525" loading="lazy" alt="Elliptical mask: white ellipse in the center on black.">
-          <figcaption><span class="tag">2.4n</span> Mask: white = Edward.</figcaption>
+          <img src="./outputs/part2_4/edward_batman_mask.jpg" width="700" height="525" loading="lazy" alt="Mask traced around Edward's hair, face, neck, collar and the top of his jacket, tilted 13 degrees, with a flat bottom and rounded corners: a white head-and-shoulders shape on black.">
+          <figcaption><span class="tag">2.4n</span> Mask: white = Edward (tilted 13° and placed).</figcaption>
         </figure>
         <figure class="fig">
-          <img src="./outputs/part2_4/edward_batman_hard_mask.jpg" width="700" height="525" loading="lazy" alt="Hard-mask composite: a sharp-edged ellipse of Edward pasted over Batman.">
+          <img src="./outputs/part2_4/edward_batman_hard_mask.jpg" width="700" height="525" loading="lazy" alt="Hard-mask composite: Edward's head and collar cut out with a sharp edge and a flat, round-cornered bottom, set into Batman's cowl and cape.">
           <figcaption><span class="tag">2.4o</span> Hard mask: a sticker.</figcaption>
         </figure>
       </div>
@@ -1185,16 +1185,16 @@ result = np.sum(np.stack(blended_levels), axis=<span class="n">0</span>)</code><
 
     <div class="grid grid--2 cowl-compare">
       <figure class="fig">
-        <div class="zoom" style="--x:.20; --y:.10; --w:.34; --ar:.75; --ratio:1/1;">
-          <img src="./outputs/part2_4/edward_batman_hard_mask.jpg" width="700" height="525" loading="lazy" alt="Close crop of the hard mask edge across Edward's hair and the cowl.">
+        <div class="zoom" style="--x:.36; --y:.06; --w:.30; --ar:.75; --ratio:1/1;">
+          <img src="./outputs/part2_4/edward_batman_hard_mask.jpg" width="700" height="525" loading="lazy" alt="Close crop of the hard mask: a sharp cut line around Edward's hair and jaw.">
         </div>
-        <figcaption>Hard mask, detail: a clean cut line.</figcaption>
+        <figcaption>Hard mask, detail: a cut line all the way around.</figcaption>
       </figure>
       <figure class="fig">
-        <div class="zoom" style="--x:.20; --y:.10; --w:.34; --ar:.75; --ratio:1/1;">
-          <img src="./outputs/part2_4/edward_batman_final.jpg" width="700" height="525" loading="lazy" alt="Close crop of the blended edge: color fades gradually while the hair stays sharp.">
+        <div class="zoom" style="--x:.36; --y:.06; --w:.30; --ar:.75; --ratio:1/1;">
+          <img src="./outputs/part2_4/edward_batman_final.jpg" width="700" height="525" loading="lazy" alt="Close crop of the blended edge: his hair fades into the cowl while the strands stay sharp.">
         </div>
-        <figcaption>Blended, detail: color fades, hair stays crisp.</figcaption>
+        <figcaption>Blended, detail: the hair fades into the cowl.</figcaption>
       </figure>
     </div>
 
@@ -1208,35 +1208,35 @@ result = np.sum(np.stack(blended_levels), axis=<span class="n">0</span>)</code><
         <p class="stack-table__col">L₄ · low<span>residual, σ 8</span></p>
 
         <p class="stack-table__row">Mask<span>G<sub>M,i</sub></span></p>
-        <figure class="fig fig--xs"><img src="./outputs/part2_4/edward_batman_mask_level_0.jpg" width="700" height="525" loading="lazy" alt="Ellipse mask level 0, hard edge."><figcaption>hard</figcaption></figure>
-        <figure class="fig fig--xs"><img src="./outputs/part2_4/edward_batman_mask_level_1.jpg" width="700" height="525" loading="lazy" alt="Ellipse mask level 1."><figcaption>σ 1</figcaption></figure>
-        <figure class="fig fig--xs"><img src="./outputs/part2_4/edward_batman_mask_level_2.jpg" width="700" height="525" loading="lazy" alt="Ellipse mask level 2."><figcaption>σ 2</figcaption></figure>
-        <figure class="fig fig--xs"><img src="./outputs/part2_4/edward_batman_mask_level_3.jpg" width="700" height="525" loading="lazy" alt="Ellipse mask level 3, soft edge."><figcaption>σ 4</figcaption></figure>
-        <figure class="fig fig--xs"><img src="./outputs/part2_4/edward_batman_mask_level_4.jpg" width="700" height="525" loading="lazy" alt="Ellipse mask level 4, wide soft edge."><figcaption>σ 8</figcaption></figure>
+        <figure class="fig fig--xs"><img src="./outputs/part2_4/edward_batman_mask_level_0.jpg" width="700" height="525" loading="lazy" alt="Mask level 0, hard edge."><figcaption>hard</figcaption></figure>
+        <figure class="fig fig--xs"><img src="./outputs/part2_4/edward_batman_mask_level_1.jpg" width="700" height="525" loading="lazy" alt="Mask level 1."><figcaption>σ 1</figcaption></figure>
+        <figure class="fig fig--xs"><img src="./outputs/part2_4/edward_batman_mask_level_2.jpg" width="700" height="525" loading="lazy" alt="Mask level 2."><figcaption>σ 2</figcaption></figure>
+        <figure class="fig fig--xs"><img src="./outputs/part2_4/edward_batman_mask_level_3.jpg" width="700" height="525" loading="lazy" alt="Mask level 3, soft edge."><figcaption>σ 4</figcaption></figure>
+        <figure class="fig fig--xs"><img src="./outputs/part2_4/edward_batman_mask_level_4.jpg" width="700" height="525" loading="lazy" alt="Mask level 4, wide soft edge."><figcaption>σ 8</figcaption></figure>
 
         <p class="stack-table__row">Edward<span>G<sub>M</sub> · L<sub>A</sub></span></p>
-        <figure class="fig fig--xs"><img src="./outputs/part2_4/edward_batman_A_masked_level_0.jpg" width="700" height="525" loading="lazy" alt="Edward level 0 inside the ellipse."><figcaption>L₀</figcaption></figure>
-        <figure class="fig fig--xs"><img src="./outputs/part2_4/edward_batman_A_masked_level_1.jpg" width="700" height="525" loading="lazy" alt="Edward level 1 inside the ellipse."><figcaption>L₁</figcaption></figure>
-        <figure class="fig fig--xs"><img src="./outputs/part2_4/edward_batman_A_masked_level_2.jpg" width="700" height="525" loading="lazy" alt="Edward level 2 inside the ellipse."><figcaption>L₂</figcaption></figure>
-        <figure class="fig fig--xs"><img src="./outputs/part2_4/edward_batman_A_masked_level_3.jpg" width="700" height="525" loading="lazy" alt="Edward level 3 inside a softening ellipse."><figcaption>L₃</figcaption></figure>
-        <figure class="fig fig--xs"><img src="./outputs/part2_4/edward_batman_A_masked_level_4.jpg" width="700" height="525" loading="lazy" alt="Edward residual inside a blurry ellipse."><figcaption>L₄</figcaption></figure>
+        <figure class="fig fig--xs"><img src="./outputs/part2_4/edward_batman_A_masked_level_0.jpg" width="700" height="525" loading="lazy" alt="Edward level 0 inside the outline."><figcaption>L₀</figcaption></figure>
+        <figure class="fig fig--xs"><img src="./outputs/part2_4/edward_batman_A_masked_level_1.jpg" width="700" height="525" loading="lazy" alt="Edward level 1 inside the outline."><figcaption>L₁</figcaption></figure>
+        <figure class="fig fig--xs"><img src="./outputs/part2_4/edward_batman_A_masked_level_2.jpg" width="700" height="525" loading="lazy" alt="Edward level 2 inside the outline."><figcaption>L₂</figcaption></figure>
+        <figure class="fig fig--xs"><img src="./outputs/part2_4/edward_batman_A_masked_level_3.jpg" width="700" height="525" loading="lazy" alt="Edward level 3 inside a softening outline."><figcaption>L₃</figcaption></figure>
+        <figure class="fig fig--xs"><img src="./outputs/part2_4/edward_batman_A_masked_level_4.jpg" width="700" height="525" loading="lazy" alt="Edward residual: a blurry head-and-shoulders shape."><figcaption>L₄</figcaption></figure>
 
         <p class="stack-table__row">Batman<span>(1 − G<sub>M</sub>) · L<sub>B</sub></span></p>
-        <figure class="fig fig--xs"><img src="./outputs/part2_4/edward_batman_B_masked_level_0.jpg" width="700" height="525" loading="lazy" alt="Batman level 0 outside the ellipse."><figcaption>L₀</figcaption></figure>
-        <figure class="fig fig--xs"><img src="./outputs/part2_4/edward_batman_B_masked_level_1.jpg" width="700" height="525" loading="lazy" alt="Batman level 1 outside the ellipse, the cowl ears visible."><figcaption>L₁</figcaption></figure>
-        <figure class="fig fig--xs"><img src="./outputs/part2_4/edward_batman_B_masked_level_2.jpg" width="700" height="525" loading="lazy" alt="Batman level 2 outside the ellipse."><figcaption>L₂</figcaption></figure>
-        <figure class="fig fig--xs"><img src="./outputs/part2_4/edward_batman_B_masked_level_3.jpg" width="700" height="525" loading="lazy" alt="Batman level 3 outside the ellipse."><figcaption>L₃</figcaption></figure>
-        <figure class="fig fig--xs"><img src="./outputs/part2_4/edward_batman_B_masked_level_4.jpg" width="700" height="525" loading="lazy" alt="Batman residual with a dark hole where the ellipse is."><figcaption>L₄</figcaption></figure>
+        <figure class="fig fig--xs"><img src="./outputs/part2_4/edward_batman_B_masked_level_0.jpg" width="700" height="525" loading="lazy" alt="Batman level 0 outside the outline."><figcaption>L₀</figcaption></figure>
+        <figure class="fig fig--xs"><img src="./outputs/part2_4/edward_batman_B_masked_level_1.jpg" width="700" height="525" loading="lazy" alt="Batman level 1 outside the outline, the cowl ears visible."><figcaption>L₁</figcaption></figure>
+        <figure class="fig fig--xs"><img src="./outputs/part2_4/edward_batman_B_masked_level_2.jpg" width="700" height="525" loading="lazy" alt="Batman level 2 outside the outline."><figcaption>L₂</figcaption></figure>
+        <figure class="fig fig--xs"><img src="./outputs/part2_4/edward_batman_B_masked_level_3.jpg" width="700" height="525" loading="lazy" alt="Batman level 3 outside the outline."><figcaption>L₃</figcaption></figure>
+        <figure class="fig fig--xs"><img src="./outputs/part2_4/edward_batman_B_masked_level_4.jpg" width="700" height="525" loading="lazy" alt="Batman residual with a dark hole where Edward goes."><figcaption>L₄</figcaption></figure>
 
         <p class="stack-table__row">Blended<span>L<sub>S,i</sub></span></p>
         <figure class="fig fig--xs"><img src="./outputs/part2_4/edward_batman_blended_level_0.jpg" width="700" height="525" loading="lazy" alt="Blended level 0."><figcaption>L₀</figcaption></figure>
         <figure class="fig fig--xs"><img src="./outputs/part2_4/edward_batman_blended_level_1.jpg" width="700" height="525" loading="lazy" alt="Blended level 1: Edward's features with the cowl ears above."><figcaption>L₁</figcaption></figure>
         <figure class="fig fig--xs"><img src="./outputs/part2_4/edward_batman_blended_level_2.jpg" width="700" height="525" loading="lazy" alt="Blended level 2."><figcaption>L₂</figcaption></figure>
         <figure class="fig fig--xs"><img src="./outputs/part2_4/edward_batman_blended_level_3.jpg" width="700" height="525" loading="lazy" alt="Blended level 3."><figcaption>L₃</figcaption></figure>
-        <figure class="fig fig--xs"><img src="./outputs/part2_4/edward_batman_blended_level_4.jpg" width="700" height="525" loading="lazy" alt="Blended residual: blurry teal face fading into orange dusk."><figcaption>L₄</figcaption></figure>
+        <figure class="fig fig--xs"><img src="./outputs/part2_4/edward_batman_blended_level_4.jpg" width="700" height="525" loading="lazy" alt="Blended residual: a blurry Edward fading into the cowl and cape."><figcaption>L₄</figcaption></figure>
       </div>
     </div>
-    <p class="note">Same layout as the Oraple table. The ellipse's edge is nearly hard in L₀–L₁ and spreads out by L₄, which is where the teal-to-orange color change happens.</p>
+    <p class="note">Same layout as the Oraple table. The outline is nearly hard in L₀–L₁ and spreads out by L₄, which is where his hair fades into the cowl and his jacket fades into the cape.</p>
   </div>
 </section>
 
