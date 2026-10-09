@@ -1,17 +1,10 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-4 -134 708 708">
   <defs>
-    <linearGradient id="dusk" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0" stop-color="#1c2440"/>
-      <stop offset=".45" stop-color="#4c4064"/>
-      <stop offset=".75" stop-color="#8a5762"/>
-      <stop offset="1" stop-color="#d98a5a"/>
-    </linearGradient>
-    <mask id="crescent">
-      <circle cx="49" cy="14" r="9" fill="#fff"/>
-      <circle cx="44.5" cy="18.5" r="8" fill="#000"/>
-    </mask>
+    <clipPath id="inner"><ellipse cx="350" cy="220" rx="306" ry="177"/></clipPath>
   </defs>
-  <rect width="64" height="64" rx="14" fill="url(#dusk)"/>
-  <circle cx="49" cy="14" r="9" fill="#f1ece0" mask="url(#crescent)"/>
-  <path fill="#0b0c0e" d="M0,64 C3,56.5 11,53 20.5,51.5 C19.8,48 19.5,45 19.6,41 L18,22 L25.8,31 Q32,29.4 38.2,31 L46,22 L44.4,41 C44.5,45 44.2,48 43.5,51.5 C53,53 61,56.5 64,64 Z"/>
+  <ellipse cx="350" cy="220" rx="348" ry="218" fill="#231f20"/>
+  <ellipse cx="350" cy="220" rx="329" ry="199" fill="#fff200"/>
+  <ellipse cx="350" cy="220" rx="317" ry="188" fill="#231f20"/>
+  <ellipse cx="350" cy="220" rx="306" ry="177" fill="#fff200"/>
+  <path clip-path="url(#inner)" fill="#231f20" d="M0,0 L213,0 L213,140 C213,170 235,192 262,192 C285,192 305,172 305,145 L305,20 L315,20 L331,72 L369,72 L385,20 L395,20 L395,145 C395,172 415,192 438,192 C465,192 487,170 487,140 L487,0 L700,0 L700,345 L567,345 A56,56 0 0 0 452,340 A52,52 0 0 0 352,352 L350,420 L348,352 A52,52 0 0 0 248,340 A56,56 0 0 0 133,345 L0,345 Z"/>
 </svg>
