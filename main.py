@@ -2256,11 +2256,87 @@ blend_and_save(
     debug=False
 )
 
-# For now the main result uses the same oval mask.
+# Final version: outline of Edward in edward.jpg, going clockwise from
+# the top of his hair. It covers the inner part of his hair, his face,
+# neck, collar and the top of his jacket out to the shoulder seams
+# (the jacket gets cut shorter below, after he's placed).
+# The wild outer hair and the teal background stay outside, so Batman's
+# cowl ears still rise above him.
+edward_outline = [
+    (0.526, 0.060), (0.580, 0.065), (0.620, 0.085), (0.640, 0.130),
+    (0.645, 0.200), (0.635, 0.270), (0.622, 0.333), (0.615, 0.400),
+    (0.611, 0.457), (0.619, 0.495), (0.650, 0.525), (0.690, 0.550),
+    (0.730, 0.575), (0.760, 0.605), (0.775, 0.650), (0.770, 0.705),
+    (0.745, 0.760), (0.700, 0.800), (0.620, 0.825), (0.530, 0.830),
+    (0.440, 0.822), (0.360, 0.795), (0.305, 0.750), (0.280, 0.695),
+    (0.285, 0.645), (0.315, 0.610), (0.355, 0.580), (0.395, 0.535),
+    (0.415, 0.495), (0.411, 0.429), (0.379, 0.381), (0.361, 0.314),
+    (0.354, 0.238), (0.365, 0.162), (0.401, 0.100), (0.454, 0.068),
+]
+
+# The blend mask is the same outline with the four points along his
+# left cheek pushed out ~10 px. Right on the outline, the coarse levels
+# of the blend are only half Edward, which blurred the side of his face.
+blend_outline = list(edward_outline)
+blend_outline[5:9] = [(0.642, 0.270), (0.638, 0.333), (0.632, 0.400), (0.622, 0.457)]
+
+# Placement. Edward's head leans about 8 degrees counter-clockwise and
+# Batman's leans about 6 degrees clockwise, so Edward gets tilted 13
+# degrees clockwise. His eyes and the middle of his mouth are then fit
+# onto target points inside the cowl. The targets start from Batman's
+# own eyes and mouth, moved 28 px left and pulled 5% closer together:
+# Batman's head is turned slightly, so his eyes sit right of the middle
+# of the cowl, and matching them exactly pushed Edward's cheek and hair
+# out past the cowl into the sky. (Fractions of width / height.)
+edward_landmarks = [(0.465, 0.322), (0.578, 0.300), (0.535, 0.452)]
+batman_eyes_mouth = np.array([(0.487, 0.366), (0.575, 0.380), (0.523, 0.505)])
+
+shifted = batman_eyes_mouth + [-28 / w, 0]
+eye_middle = shifted[:2].mean(axis=0)
+cowl_landmarks = eye_middle + 0.95 * (shifted - eye_middle)
+
+edward_placed, edward_batman_mask, edward_move = place_onto(
+    edward_blend,
+    traced_mask(h, w, blend_outline),
+    edward_landmarks,
+    cowl_landmarks,
+    tilt_deg=13.0
+)
+
+_, edward_silhouette, _ = place_onto(
+    edward_blend,
+    traced_mask(h, w, edward_outline),
+    edward_landmarks,
+    cowl_landmarks,
+    tilt_deg=13.0
+)
+
+# Cut the jacket off flat, about halfway between his chin and the bottom
+# of the traced jacket, with rounded corners so the shoulders curve into
+# the flat edge.
+jacket_cut = int(round(0.72 * h))
+edward_batman_mask = round_off_bottom(edward_batman_mask, jacket_cut, radius=50)
+edward_silhouette = round_off_bottom(edward_silhouette, jacket_cut, radius=50)
+
+# Swap the teal Forks background around Edward for the Batman image
+# before blending, so the soft edge of the blend pulls in Batman's sky
+# and cowl instead of a teal glow.
+edward_placed = replace_background(
+    edward_placed,
+    edward_silhouette,
+    batman_blend
+)
+
+print(
+    f"Edward placed onto Batman: scale {edward_move.scale:.3f}, "
+    f"tilt {np.degrees(edward_move.rotation):.1f} deg, "
+    f"shift {np.round(edward_move.translation, 1)} px"
+)
+
 edward_batman_final = blend_and_save(
-    edward_blend,   # inside white mask
-    batman_blend,   # outside mask
-    edward_batman_oval,
+    edward_placed,   # inside white mask
+    batman_blend,    # outside mask
+    edward_batman_mask,
     "outputs/part2_4/edward_batman",
     levels=blend_levels,
     base_sigma=blend_base_sigma
