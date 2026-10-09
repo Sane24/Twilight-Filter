@@ -2235,8 +2235,9 @@ batman_blend, _ = align_to_reference(
 
 h, w = edward_blend.shape[:2]
 
-# Elliptical region for Batman's face/cowl
-edward_batman_mask = ellipse_mask(
+# First attempt: an ellipse around his head. It's wider than his head,
+# so his hair and a ring of teal background come in with him.
+edward_batman_oval = ellipse_mask(
     h,
     w,
     cx_frac=0.50,
@@ -2245,48 +2246,24 @@ edward_batman_mask = ellipse_mask(
     ry_frac=0.34
 )
 
-edward_batman_hard = (
-    edward_batman_mask[:, :, None] * edward_blend
-    +
-    (1.0 - edward_batman_mask[:, :, None]) * batman_blend
-)
-save_gray(
-    "outputs/part2_4/edward_batman_mask.jpg",
-    edward_batman_mask
-)
-
-save_color(
-    "outputs/part2_4/edward_batman_hard_mask.jpg",
-    edward_batman_hard
-)
-
-(
-    edward_batman_final,
-    edward_batman_mask_stack,
-    edward_batman_lap_a,
-    edward_batman_lap_b,
-    edward_batman_a_masked,
-    edward_batman_b_masked,
-    edward_batman_blended_levels
-) = multiresolution_blend(
+blend_and_save(
     edward_blend,   # inside white mask
     batman_blend,   # outside mask
-    edward_batman_mask,
+    edward_batman_oval,
+    "outputs/part2_4/edward_batman_oval",
+    levels=blend_levels,
+    base_sigma=blend_base_sigma,
+    debug=False
+)
+
+# For now the main result uses the same oval mask.
+edward_batman_final = blend_and_save(
+    edward_blend,   # inside white mask
+    batman_blend,   # outside mask
+    edward_batman_oval,
+    "outputs/part2_4/edward_batman",
     levels=blend_levels,
     base_sigma=blend_base_sigma
-)
-
-save_color(
-    "outputs/part2_4/edward_batman_final.jpg",
-    edward_batman_final
-)
-
-save_blend_debug(
-    "outputs/part2_4/edward_batman",
-    edward_batman_mask_stack,
-    edward_batman_a_masked,
-    edward_batman_b_masked,
-    edward_batman_blended_levels
 )
 
 print("Saved Part 2.4 results to outputs/part2_4/")
