@@ -284,7 +284,7 @@ sub, sup { font-size: .72em; line-height: 0; }
   margin: 0 auto;
   padding: 0 var(--gutter);
   display: grid;
-  grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   gap: clamp(32px, 5vw, 72px);
   align-items: end;
 }
@@ -298,7 +298,7 @@ sub, sup { font-size: .72em; line-height: 0; }
 }
 
 .hero__title {
-  font-size: clamp(3.4rem, 9.5vw, 7.5rem);
+  font-size: clamp(3.4rem, 9.5vw, 6.4rem);
   font-weight: 600;
   line-height: .86;
   letter-spacing: .035em;
@@ -353,19 +353,24 @@ sub, sup { font-size: .72em; line-height: 0; }
   text-decoration-color: rgba(201, 164, 79, 0.5);
 }
 
+/* two hybrids side by side, sized to the same height: each plate's
+   flex-grow is its image's width / height, and the 14px basis covers the
+   frame (6px padding + 1px border on each side) */
 .hero__plates {
   display: flex;
-  align-items: flex-end;
-  gap: 18px;
+  align-items: flex-start;
   justify-content: flex-end;
+  gap: 16px;
 }
 
 .hero__plate {
   margin: 0;
-  max-width: 360px;
+  min-width: 0;
 }
+.hero__plate--eb { flex: 0.75 1 14px; }       /* 540 x 720 */
+.hero__plate--zm { flex: 0.9664 1 14px; }     /* 720 x 745 */
 
-.hero__plate img {
+.hero__plate > img {
   display: block;
   width: 100%;
   border: 1px solid rgba(236, 230, 218, 0.3);
@@ -373,8 +378,10 @@ sub, sup { font-size: .72em; line-height: 0; }
   background: rgba(0, 0, 0, 0.28);
 }
 
-.hero__plate figcaption,
-.hero__far figcaption {
+.hero__plate figcaption {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
   margin-top: 10px;
   font: 400 .8125rem/1.45 var(--sans);
   color: var(--ivory-dim);
@@ -382,20 +389,14 @@ sub, sup { font-size: .72em; line-height: 0; }
 
 .hero__plate .tag { color: var(--gold); }
 
-.hero__far {
-  margin: 0 0 4.2rem;
-  width: 97px;
+/* the same hybrid at 18%, in its caption */
+.hero__thumb {
   flex: none;
-}
-
-.hero__far img {
   display: block;
-  width: 97px;
-  height: 130px;
+  width: auto;
+  height: 46px;
   border: 1px solid rgba(236, 230, 218, 0.3);
 }
-
-.hero__far figcaption { font-size: .75rem; }
 
 .hero__horizon {
   position: absolute;
@@ -1787,13 +1788,17 @@ table { border-collapse: collapse; }
    Responsive (screen only — print keeps the desktop structure, see below)
    -------------------------------------------------------------------------- */
 
+@media screen and (min-width: 961px) {
+  .hero__title { font-size: clamp(3.4rem, 8.2vw, 6.4rem); }
+}
+
 @media screen and (max-width: 1080px) {
   .topbar__nav .long { display: none; }
 }
 
 @media screen and (max-width: 960px) {
   .hero__inner { grid-template-columns: minmax(0, 1fr); }
-  .hero__plates { justify-content: flex-start; }
+  .hero__plates { justify-content: flex-start; max-width: 560px; }
 
   .overview { grid-template-columns: minmax(0, 1fr); }
 
@@ -1878,8 +1883,9 @@ table { border-collapse: collapse; }
   .topbar__nav { margin-left: 0; }
   .topbar__nav a { padding: 8px 8px; }
 
-  .hero__far { margin-bottom: 3.6rem; }
-  .hero__plate { max-width: 220px; }
+  .hero__plates { gap: 10px; }
+  .hero__plate figcaption { font-size: .6875rem; }
+  .hero__thumb { display: none; }
 
   .grid--3 { grid-template-columns: minmax(0, 1fr); }
   .grid--5 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
@@ -1970,7 +1976,7 @@ table { border-collapse: collapse; }
   .projects { background: none; border-bottom: .75pt solid #c8c8c8; margin-bottom: 10pt; }
   .projects__inner { max-width: none; padding: 0; min-height: 0; }
   .projects a { padding: 0 10pt 5pt 0; color: #111; }
-  .projects a[aria-current="page"] { box-shadow: none; text-decoration: underline; }
+  .projects a[aria-current="page"] { box-shadow: none; text-decoration: underline; color: #111; }
   .projects__label { color: #4a4a4a; }
   .projects__num { color: #7a1a26; }
 
@@ -2000,11 +2006,13 @@ table { border-collapse: collapse; }
   .hero__by::before { background: #7a1a26; }
   .hero__url, .hero__url a { color: #111; }
   .hero__url a { text-decoration: underline; text-decoration-color: #999; }
-  .hero__plate { max-width: 2.1in; }
-  .hero__plate img { padding: 0; border-color: #999; background: none; }
-  .hero__plate figcaption, .hero__far figcaption { color: #4a4a4a; font-size: 7.5pt; }
+  .hero__plates { width: 3.7in; gap: 8pt; }
+  .hero__plate > img { padding: 0; border-color: #999; background: none; }
+  .hero__plate--eb { flex: 0.75 1 2px; }
+  .hero__plate--zm { flex: 0.9664 1 2px; }
+  .hero__plate figcaption { color: #4a4a4a; font-size: 7pt; gap: 5pt; }
   .hero__plate .tag { color: #7a1a26; }
-  .hero__far { margin-bottom: 2.6rem; }
+  .hero__thumb { height: 30pt; border-color: #999; }
 
   /* sections */
   .sec { padding: 16pt 0 6pt; }
