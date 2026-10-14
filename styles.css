@@ -280,11 +280,11 @@ sub, sup { font-size: .72em; line-height: 0; }
 .hero__inner {
   position: relative;
   z-index: 1;
-  max-width: var(--max);
+  max-width: calc(var(--max) + 100px);
   margin: 0 auto;
   padding: 0 var(--gutter);
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  grid-template-columns: minmax(0, 6fr) minmax(0, 7fr);
   gap: clamp(32px, 5vw, 72px);
   align-items: end;
 }
@@ -353,28 +353,43 @@ sub, sup { font-size: .72em; line-height: 0; }
   text-decoration-color: rgba(201, 164, 79, 0.5);
 }
 
-/* Edward + Batman is the main plate and Zendaya + Mona Lisa sits beside it at
-   about 60% of its height. The two figures share the parent's rows (subgrid),
-   so the image bottoms line up and the captions start on the same line. */
+/* small label over the pair: Pattinson and Zendaya star together in The Drama */
+.hero__gallery { min-width: 0; }
+.hero__gallery-label {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin: 0 0 14px;
+  font: 500 .75rem/1 var(--mono);
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+.hero__gallery-label::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, rgba(201, 164, 79, 0.55), rgba(201, 164, 79, 0));
+}
+
+/* the two hybrids side by side at the same height: each plate's flex-grow
+   is its image's width / height, and the 14px basis covers the frame
+   (6px padding + 1px border on each side) */
 .hero__plates {
-  display: grid;
-  grid-template-columns: minmax(0, 75fr) minmax(0, 58fr);
-  grid-template-rows: auto auto;
-  column-gap: 18px;
-  row-gap: 10px;
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
 }
 
 .hero__plate {
-  display: grid;
-  grid-row: span 2;
-  grid-template-rows: subgrid;
   margin: 0;
   min-width: 0;
 }
+.hero__plate--eb { flex: 0.75 1 14px; }       /* 540 x 720 */
+.hero__plate--zm { flex: 0.9664 1 14px; }     /* 720 x 745 */
 
 .hero__plate > img {
   display: block;
-  align-self: end;
   width: 100%;
   border: 1px solid rgba(236, 230, 218, 0.3);
   padding: 6px;
@@ -384,8 +399,8 @@ sub, sup { font-size: .72em; line-height: 0; }
 .hero__plate figcaption {
   display: flex;
   align-items: flex-start;
-  align-self: start;
   gap: 10px;
+  margin-top: 10px;
   font: 400 .8125rem/1.45 var(--sans);
   color: var(--ivory-dim);
 }
@@ -1812,7 +1827,7 @@ table { border-collapse: collapse; }
    -------------------------------------------------------------------------- */
 
 @media screen and (min-width: 961px) {
-  .hero__title { font-size: clamp(3.4rem, 8.2vw, 6.4rem); }
+  .hero__title { font-size: clamp(3.4rem, 7.6vw, 6.4rem); }
 }
 
 @media screen and (max-width: 1080px) {
@@ -1821,7 +1836,7 @@ table { border-collapse: collapse; }
 
 @media screen and (max-width: 960px) {
   .hero__inner { grid-template-columns: minmax(0, 1fr); }
-  .hero__plates { max-width: 560px; }
+  .hero__plates { max-width: 600px; }
 
   .overview { grid-template-columns: minmax(0, 1fr); }
 
@@ -1907,7 +1922,7 @@ table { border-collapse: collapse; }
   .topbar__nav { margin-left: 0; }
   .topbar__nav a { padding: 8px 8px; }
 
-  .hero__plates { column-gap: 10px; }
+  .hero__plates { gap: 10px; }
   .hero__plate figcaption { font-size: .6875rem; }
   .hero__thumb { display: none; }
 
@@ -2030,10 +2045,14 @@ table { border-collapse: collapse; }
   .hero__by::before { background: #7a1a26; }
   .hero__url, .hero__url a { color: #111; }
   .hero__url a { text-decoration: underline; text-decoration-color: #999; }
-  .hero__plates { width: 3.5in; column-gap: 8pt; row-gap: 5pt; }
+  .hero__plates { width: 3.7in; gap: 8pt; }
+  .hero__plate--eb { flex: 0.75 1 2px; }
+  .hero__plate--zm { flex: 0.9664 1 2px; }
   .hero__plate > img { padding: 0; border-color: #999; background: none; }
   .hero__plate figcaption { color: #4a4a4a; font-size: 7pt; gap: 5pt; }
   .hero__plate .tag { color: #7a1a26; }
+  .hero__gallery-label { color: #7a1a26; margin-bottom: 6pt; font-size: 7pt; }
+  .hero__gallery-label::after { background: #c8c8c8; }
   .hero__thumb { height: 30pt; border-color: #999; }
 
   /* sections */
