@@ -1556,11 +1556,12 @@ table { border-collapse: collapse; }
   animation: rain-near .72s linear infinite;
 }
 
-/* Part 2: bat-signal over Gotham. Switches on when it scrolls into view. */
+/* Part 2: bat-signal over Gotham. Switches on when it scrolls into view,
+   then sweeps side to side like a searchlight and keeps flickering. */
 .signal {
   --sw: clamp(170px, 22vw, 300px);
   position: absolute;
-  right: 6%;
+  right: 9%;
   top: 0;
   bottom: 0;
   width: var(--sw);
@@ -1570,7 +1571,9 @@ table { border-collapse: collapse; }
   position: absolute;
   inset: 0;
   transform-origin: 50% 100%;
-  animation: signal-sway 12s ease-in-out infinite alternate;
+  animation:
+    signal-sway 7s ease-in-out infinite alternate,
+    signal-flicker 6.5s linear infinite;
 }
 .signal__emblem {
   position: absolute;
@@ -1727,7 +1730,24 @@ table { border-collapse: collapse; }
 @keyframes fog-drift { from { transform: translateX(-6%); } to { transform: translateX(6%); } }
 @keyframes rain-far { from { transform: rotate(10deg) translateY(0); } to { transform: rotate(10deg) translateY(120px); } }
 @keyframes rain-near { from { transform: rotate(10deg) translateY(0); } to { transform: rotate(10deg) translateY(180px); } }
-@keyframes signal-sway { from { transform: rotate(-5deg); } to { transform: rotate(4deg); } }
+@keyframes signal-sway {
+  from { transform: translateX(-24px) rotate(-15deg); }
+  to { transform: translateX(24px) rotate(13deg); }
+}
+/* mostly on, with an irregular stutter every couple of seconds */
+@keyframes signal-flicker {
+  0%, 18% { opacity: 1; }
+  19% { opacity: .25; }
+  20% { opacity: .95; }
+  21% { opacity: .4; }
+  22.5%, 61% { opacity: 1; }
+  62% { opacity: .55; }
+  63%, 83% { opacity: 1; }
+  84% { opacity: .15; }
+  85% { opacity: .85; }
+  86% { opacity: .3; }
+  88%, 100% { opacity: 1; }
+}
 @keyframes signal-on {
   0% { opacity: 0; }
   8% { opacity: .7; }
@@ -1871,7 +1891,8 @@ table { border-collapse: collapse; }
   }
 
   .signal { --sw: 150px; right: -4%; }
-  .signal__rig { opacity: .55; }
+  .signal__emblem { opacity: .45; }
+  .signal__beam { opacity: .55; }
   .hero__sun { left: 12%; }
 }
 
