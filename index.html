@@ -1080,7 +1080,7 @@ result = np.sum(np.stack(blended_levels), axis=<span class="n">0</span>)</code><
       <p class="kicker">2.4 · Custom blend 1 · straight vertical seam</p>
       <h3 class="h-display" id="dg-h">The Desperate Man + Get Out</h3>
       <p>I noticed that Gustave Courbet's <cite>The Desperate Man</cite> and the crying close-up from <cite>Get Out</cite> are built around the same thing: a face in the middle of the frame, eyes wide open, frozen in panic. The hybrids had already turned into a film-and-painting project, so this pair fit.</p>
-      <p>It's a straight vertical seam: Courbet on the left, <cite>Get Out</cite> on the right. I warped <code>getout.jpg</code> into the painting's 1500 × 1228 frame with the same two-point alignment as the hybrids, lining up the eyes, and blended with the same five-level stacks as the Oraple.</p>
+      <p>It's a straight vertical seam: Courbet on the left, <cite>Get Out</cite> on the right, split down the middle of the nose. I first lined them up with two clicked points like the hybrids, but that made the <cite>Get Out</cite> face about a third bigger than Courbet's and left the noses apart. So I marked both eyes, the bottom of the nose and the middle of the mouth in each image and fit one similarity transform to those four points (<code>align_by_landmarks()</code>). The faces turned out to be almost the same size already: <code>getout.jpg</code> ends up at 99% scale and rotated 0.35°, and every landmark lands within about 13 px. The film still is much wider than the painting, so at that size it only covers the middle 901 rows of the painting; I cropped both to those rows (1500 × 901) instead of stretching its edges. Then I blended with the same five-level stacks as the Oraple.</p>
       <figure class="fig">
         <img src="./desperateman.jpg" width="1500" height="1228" loading="lazy" alt="Gustave Courbet, The Desperate Man: a young man with long dark hair clutching his head, eyes wide.">
         <figcaption><span class="tag">2.4f</span> Courbet, <cite>The Desperate Man</cite> (c. 1843–45). Image A, the reference frame.</figcaption>
@@ -1092,30 +1092,30 @@ result = np.sum(np.stack(blended_levels), axis=<span class="n">0</span>)</code><
         <figcaption><span class="tag">2.4g</span> <cite>Get Out</cite> (2017). Image B, warped onto the painting.</figcaption>
       </figure>
       <figure class="fig fig--mask fig--mask-dark">
-        <img src="./outputs/part2_4/desperate_getout_mask.jpg" width="1500" height="1228" loading="lazy" alt="Vertical mask: white on the left half, black on the right half.">
-        <figcaption><span class="tag">2.4h</span> Mask: white = Courbet, split at column 750.</figcaption>
+        <img src="./outputs/part2_4/desperate_getout_mask.jpg" width="1500" height="901" loading="lazy" alt="Vertical mask: white on the left, black on the right, split just left of the middle.">
+        <figcaption><span class="tag">2.4h</span> Mask: white = Courbet, split at column 720, through the nose.</figcaption>
       </figure>
     </div>
 
     <figure class="fig split-sec__hard">
-      <img src="./outputs/part2_4/desperate_getout_hard_seam.jpg" width="1500" height="1228" loading="lazy" alt="Hard seam: left half of the Courbet painting next to the right half of the Get Out still, joined at a hard vertical line.">
+      <img src="./outputs/part2_4/desperate_getout_hard_seam.jpg" width="1500" height="901" loading="lazy" alt="Hard seam: left half of the Courbet painting next to the right half of the Get Out still, joined at a hard vertical line.">
       <figcaption><span class="tag">2.4i</span> Hard seam.</figcaption>
     </figure>
     <figure class="fig split-sec__final">
-      <img src="./outputs/part2_4/desperate_getout_final.jpg" width="1500" height="1228" loading="lazy" alt="Multiresolution blend: one face, painted on the left and photographed on the right, both with a wide terrified eye.">
+      <img src="./outputs/part2_4/desperate_getout_final.jpg" width="1500" height="901" loading="lazy" alt="Multiresolution blend: one face, painted on the left and photographed on the right, the eyes, nose and open mouth lined up across the seam.">
       <figcaption><span class="tag">2.4j</span> Multiresolution blend.</figcaption>
     </figure>
 
     <div class="split-sec__crops">
       <figure class="fig">
-        <div class="zoom" style="--x:.38; --y:.30; --w:.24; --ar:.8187; --ratio:1/1;">
-          <img src="./outputs/part2_4/desperate_getout_hard_seam.jpg" width="1500" height="1228" loading="lazy" alt="Close crop of the hard seam running down the middle of the nose.">
+        <div class="zoom" style="--x:.357; --y:.322; --w:.24; --ar:.6007; --ratio:1/1;">
+          <img src="./outputs/part2_4/desperate_getout_hard_seam.jpg" width="1500" height="901" loading="lazy" alt="Close crop of the hard seam running down the middle of the nose.">
         </div>
         <figcaption>Hard seam, detail.</figcaption>
       </figure>
       <figure class="fig">
-        <div class="zoom" style="--x:.38; --y:.30; --w:.24; --ar:.8187; --ratio:1/1;">
-          <img src="./outputs/part2_4/desperate_getout_final.jpg" width="1500" height="1228" loading="lazy" alt="Close crop of the blended seam; the step is slightly softer.">
+        <div class="zoom" style="--x:.357; --y:.322; --w:.24; --ar:.6007; --ratio:1/1;">
+          <img src="./outputs/part2_4/desperate_getout_final.jpg" width="1500" height="901" loading="lazy" alt="Close crop of the blended seam; the step is slightly softer.">
         </div>
         <figcaption>Blended, detail.</figcaption>
       </figure>

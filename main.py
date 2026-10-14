@@ -725,6 +725,41 @@ def align_to_reference(moving, reference):
 
     return aligned, reference
 
+def align_by_landmarks(moving, reference, moving_points, reference_points):
+    """
+    Warp moving into reference's frame with the similarity transform
+    (scale + rotation + shift) that best maps moving_points onto
+    reference_points, in the least-squares sense. Points are (x, y) in
+    pixels on each original image.
+
+    Also returns which output pixels actually came from inside the
+    moving image, since the rest is just its edge pixels stretched out.
+    """
+    transform = sktr.estimate_transform(
+        "similarity",
+        np.array(moving_points, dtype=float),
+        np.array(reference_points, dtype=float)
+    )
+
+    aligned = sktr.warp(
+        moving,
+        inverse_map=transform.inverse,
+        output_shape=reference.shape[:2],
+        mode="edge",
+        preserve_range=True
+    )
+
+    inside = sktr.warp(
+        np.ones(moving.shape[:2]),
+        inverse_map=transform.inverse,
+        output_shape=reference.shape[:2],
+        order=0,
+        cval=0.0,
+        preserve_range=True
+    ) > 0.5
+
+    return aligned, inside, transform
+
 def hybrid_image(high_image, low_image, sigma_high, sigma_low):
     """
     high_image contributes high frequencies.
@@ -2167,15 +2202,38 @@ print(
 desperate_blend = ensure_rgb(io.imread("desperateman.jpg"))
 getout_blend = ensure_rgb(io.imread("getout.jpg"))
 
-getout_blend, _ = align_to_reference(
+# Two clicked points made the Get Out face about a third too big and left
+# the noses apart, so this pair is lined up from four landmarks instead:
+# both eyes (viewer's left, right), the bottom of the nose and the middle
+# of the mouth, in pixels on each original image.
+desperate_landmarks = [(610, 483), (820, 490), (720, 612), (720, 699)]
+getout_landmarks = [(706, 373), (920, 372), (811, 484), (816, 589)]
+
+getout_blend, getout_inside, getout_move = align_by_landmarks(
     getout_blend,
-    desperate_blend
+    desperate_blend,
+    getout_landmarks,
+    desperate_landmarks
 )
+
+print(
+    f"Get Out aligned to Courbet: scale {getout_move.scale:.3f}, "
+    f"rotation {np.degrees(getout_move.rotation):.2f} deg"
+)
+
+# The film still is much wider than the painting, so at the same face
+# size it only covers the middle rows of the painting. Crop both images
+# to the rows it fully covers instead of stretching its edges.
+covered_rows = np.nonzero(getout_inside.all(axis=1))[0]
+crop_top, crop_bottom = covered_rows[0], covered_rows[-1] + 1
+
+desperate_blend = desperate_blend[crop_top:crop_bottom]
+getout_blend = getout_blend[crop_top:crop_bottom]
 
 h, w = desperate_blend.shape[:2]
 
-# Left = Desperate Man, Right = Get Out
-desperate_getout_mask = vertical_mask(h, w)
+# Left = Desperate Man, Right = Get Out, split down the middle of the nose
+desperate_getout_mask = vertical_mask(h, w, split_col=720)
 
 desperate_getout_hard = (
     desperate_getout_mask[:, :, None] * desperate_blend
